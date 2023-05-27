@@ -2,76 +2,52 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 describe("StandardCampaign", function () {
-  let CampaignManager;
-  let FundingsManager;
-  let ProjectManager;
-  let TaskManager;
-  let Utilities;
-  let StandardCampaign;
-  let Checkers;
 
   beforeEach(async function () {
-    // Get the contract factories for the library contracts
-    CampaignManager = await ethers.getContractFactory("CampaignManager");
-    FundingsManager = await ethers.getContractFactory("FundingsManager");
-    ProjectManager = await ethers.getContractFactory("ProjectManager");
-    TaskManager = await ethers.getContractFactory("TaskManager");
-    Utilities = await ethers.getContractFactory("Utilities");
-
-    // Deploy the library contracts
-    const fundingsManager = await FundingsManager.deploy();
-    const projectManager = await ProjectManager.deploy();
-    const taskManager = await TaskManager.deploy();
+    // Libraries deployment
+    const Utilities = await ethers.getContractFactory("Utilities");
     const utilities = await Utilities.deploy();
+    await utilities.deployed();
 
-    // Deploy the CAMPAIGNMANAGER contract
-    CampaignManager = await ethers.getContractFactory("NewStandardCampaign", {
+    const FundingsManager = await ethers.getContractFactory("FundingsManager");
+    const fundingsManager = await FundingsManager.deploy();
+    await fundingsManager.deployed();
+
+    const CampaignManager = await ethers.getContractFactory("CampaignManager", {
       libraries: {
-        CampaignManager: campaignManager.address,
         FundingsManager: fundingsManager.address,
-        ProjectManager: projectManager.address,
-        TaskManager: taskManager.address,
-        Utilities: utilities.address,
       },
     });
     const campaignManager = await CampaignManager.deploy();
     await campaignManager.deployed();
 
-    // Deploy the PROJECTMANAGER contract
-    ProjectManager = await ethers.getContractFactory("NewStandardCampaign", {
+    const ProjectManager = await ethers.getContractFactory("ProjectManager", {
       libraries: {
-        CampaignManager: campaignManager.address,
-        FundingsManager: fundingsManager.address,
-        ProjectManager: projectManager.address,
-        TaskManager: taskManager.address,
         Utilities: utilities.address,
       },
     });
+    const projectManager = await ProjectManager.deploy();
     await projectManager.deployed();
 
-    // Deploy the TASKMANAGER contract 
-    TaskManager = await ethers.getContractFactory("NewStandardCampaign", {
+    const TaskManager = await ethers.getContractFactory("TaskManager", {
       libraries: {
-        CampaignManager: campaignManager.address,
         FundingsManager: fundingsManager.address,
-        ProjectManager: projectManager.address,
-        TaskManager: taskManager.address,
-        Utilities: utilities.address,
       },
     });
+    const taskManager = await TaskManager.deploy();
     await taskManager.deployed();
 
     // Link the FundingsManager library contract to the StandardCampaign contract
-    StandardCampaign = await ethers.getContractFactory("NewStandardCampaign", {
+    const StandardCampaign = await ethers.getContractFactory("StandardCampaign", {
       libraries: {
-        CampaignManager: campaignManager.address,
+        Utilities: utilities.address,
         FundingsManager: fundingsManager.address,
+        CampaignManager: campaignManager.address,
         ProjectManager: projectManager.address,
         TaskManager: taskManager.address,
-        Utilities: utilities.address,
       },
     });
-    const standardCampaign = await Campaign.deploy();
+    const standardCampaign = await StandardCampaign.deploy();
     await standardCampaign.deployed();
 
   });

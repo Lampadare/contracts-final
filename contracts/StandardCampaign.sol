@@ -2,11 +2,7 @@
 
 pragma solidity ^0.8.9;
 
-import "./CampaignManager.sol";
-import "./ProjectManager.sol";
-import "./TaskManager.sol";
-import "./FundingsManager.sol";
-import "./Utilities.sol";
+import "./Libraries.sol";
 import "./Icheckers.sol";
 
 contract StandardCampaign {
@@ -187,15 +183,6 @@ contract StandardCampaign {
     function statusFixer(uint256 _id) public {
         ProjectManager.Project storage project = projects[_id];
 
-        // If we are where we should be and votes allow to fast forward, try to fast forward
-        // Otherwise, do nothing
-        // if (
-        //     projects[_id].whatStatusProjectShouldBeAt() == project.status &&
-        //     checkFastForwardStatus(_id)
-        // ) {
-        //     updateProjectStatus(_id);
-        // }
-
         // If we should be in settled but are in gate, then return
         // moving to settled needs owner input so we'll just wait here
         if (
@@ -275,14 +262,6 @@ contract StandardCampaign {
         }
     }
 
-    // // Cleanup all tasks that are not closed at the right time for all projects ✅
-    // function cleanUpNotClosedTasksForAllProjects(uint256 _id) internal {
-    //     CampaignManager.Campaign storage campaign = campaigns[_id];
-    //     for (uint256 i = 0; i < campaign.allChildProjects.length; i++) {
-    //         cleanUpNotClosedTasks(campaign.allChildProjects[i]);
-    //     }
-    // }
-
     // Unlock the funds for all projects that can have their funds unlocked ✅
     function unlockTheFundsForAllProjectsPostCleanup(uint256 _id) internal {
         CampaignManager.Campaign storage campaign = campaigns[_id];
@@ -313,70 +292,6 @@ contract StandardCampaign {
         CampaignManager.Campaign storage campaign = campaigns[_id];
         campaign.fundings.fundUnlockAmount(_expense);
     }
-
-    // // Conditions for going to Stage 🪿ported
-    // function toStageConditions(uint256 _id) public view returns (bool, bool) {
-    //     ProjectManager.Project storage project = projects[_id];
-
-    //     bool currentStatusValid = project.status ==
-    //         ProjectManager.ProjectStatus.Settled;
-    //     bool projectHasWorkers = project.workers.length > 0;
-    //     bool allTasksHaveWorkers = true;
-    //     bool inStagePeriod = block.timestamp >=
-    //         project.nextMilestone.startStageTimestamp;
-
-    //     // For fast forward
-    //     bool stillInSettledPeriod = block.timestamp <
-    //         project.nextMilestone.startStageTimestamp;
-
-    //     // Ensure all tasks have workers
-    //     for (uint256 i = 0; i < project.childTasks.length; i++) {
-    //         if (tasks[project.childTasks[i]].worker == address(0)) {
-    //             allTasksHaveWorkers = false;
-    //             return (false, false);
-    //         }
-    //     }
-
-    //     // All conditions must be true to go to stage
-    //     return (
-    //         currentStatusValid && projectHasWorkers && inStagePeriod,
-    //         currentStatusValid &&
-    //             projectHasWorkers &&
-    //             stillInSettledPeriod &&
-    //             checkFastForwardStatus(_id)
-    //     );
-    // }
-
-    // // Conditions for going to Gate 🪿ported
-    // function toGateConditions(uint256 _id) public view returns (bool, bool) {
-    //     ProjectManager.Project storage project = projects[_id];
-    //     bool currentStatusValid = project.status ==
-    //         ProjectManager.ProjectStatus.Stage;
-    //     bool inGatePeriod = block.timestamp >=
-    //         project.nextMilestone.startGateTimestamp;
-
-    //     // For fast forward
-    //     bool stillInStagePeriod = block.timestamp <
-    //         project.nextMilestone.startGateTimestamp;
-    //     bool allTasksHaveSubmissions = true;
-
-    //     for (uint256 i = 0; i < project.childTasks.length; i++) {
-    //         if (
-    //             tasks[project.childTasks[i]].submission.status ==
-    //             TaskManager.SubmissionStatus.None
-    //         ) {
-    //             allTasksHaveSubmissions = false;
-    //         }
-    //     }
-
-    //     return (
-    //         currentStatusValid && inGatePeriod,
-    //         currentStatusValid &&
-    //             stillInStagePeriod &&
-    //             allTasksHaveSubmissions &&
-    //             checkFastForwardStatus(_id)
-    //     );
-    // }
 
     // Adjust lateness of Project before stage ✅
     function adjustLatenessBeforeStage(uint256 _id) internal {
