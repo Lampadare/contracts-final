@@ -2,11 +2,7 @@
 
 pragma solidity ^0.8.9;
 
-import "./FundingsManager.sol";
-import "./ProjectManager.sol";
-import "./CampaignManager.sol";
-import "./TaskManager.sol";
-import "./Utilities.sol";
+import "./Libraries.sol";
 import "./Istacam.sol";
 
 contract Checkers {
@@ -47,7 +43,7 @@ contract Checkers {
 
         // All conditions must be true to go to stage
         return (
-            currentStatusValid && projectHasWorkers && inStagePeriod,
+            currentStatusValid && projectHasWorkers && inStagePeriod
             currentStatusValid &&
                 allTasksHaveWorkers &&
                 stillInSettledPeriod &&
