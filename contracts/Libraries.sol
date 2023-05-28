@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.9;
 
-
 library Utilities {
     // Returns maximum of two numbers ✅
     function max(uint256 a, uint256 b) external pure returns (uint) {
@@ -497,6 +496,8 @@ library ProjectManager {
         Closed,
         Stage,
         Gate,
+        PostSub,
+        PostDisp,
         Settled
     }
 
@@ -759,10 +760,10 @@ library ProjectManager {
 library TaskManager {
     struct Task {
         // Description of the task
+        uint256 id;
         string metadata;
         // Contribution weight
         uint256 weight;
-        uint256 reward;
         bool paid;
         // Timestamps
         uint256 creationTime;
@@ -770,15 +771,10 @@ library TaskManager {
         // Worker
         address payable worker;
         // Completion
-        Submission submission;
-        bool closed;
+        string submission;
+        SubmissionStatus submissionStatus;
         // Parent Campaign & Project (contains IDs)
         uint256 parentProject;
-    }
-
-    struct Submission {
-        string metadata;
-        SubmissionStatus status;
     }
 
     enum SubmissionStatus {
@@ -787,12 +783,6 @@ library TaskManager {
         Accepted,
         Declined,
         Disputed
-    }
-
-    enum TaskStatusFilter {
-        NotClosed,
-        Closed,
-        All
     }
 
     function cleanupTask(
@@ -807,33 +797,26 @@ library TaskManager {
             block.timestamp > _startGateTimestamp + _taskSubmissionDecisionTime,
             "E47"
         );
-        // If the task is not closed
-        if (!_task.closed) {
-            // If the task received submission and the decision time window has passed
-            // but the submission is still pending, accept it, close it and pay the worker
-            if (_task.submission.status == SubmissionStatus.Pending) {
-                _task.submission.status = SubmissionStatus.Accepted;
-                _task.closed = true;
-                _task.paid = true;
-                _task.worker.transfer(_task.reward);
-                FundingsManager.fundUseAmount(_campaign.fundings, _task.reward);
-            }
 
-            // If the task received submission, which was declined and the dispute time window
-            // has passed, decline it, close it and unlock the funds
-            if (
-                _task.submission.status ==
-                TaskManager.SubmissionStatus.Declined &&
-                block.timestamp >=
-                _startGateTimestamp + _taskSubmissionDecisionDisputeTime
-            ) {
-                _task.closed = true;
-                _task.paid = false;
-                FundingsManager.fundUnlockAmount(
-                    _campaign.fundings,
-                    _task.reward
-                );
-            }
+        // If the task received submission and the decision time window has passed
+        // but the submission is still pending, accept it, close it and pay the worker
+        if (_task.submissionStatus == SubmissionStatus.Pending) {
+            _task.submissionStatus = SubmissionStatus.Accepted;
+            _task.paid = true;
+            _task.worker.transfer(_task.reward);
+            FundingsManager.fundUseAmount(_campaign.fundings, _task.reward);
+        }
+
+        // If the task received submission, which was declined and the dispute time window
+        // has passed, decline it, close it and unlock the funds
+        if (
+            _task.submission.status == TaskManager.SubmissionStatus.Declined &&
+            block.timestamp >=
+            _startGateTimestamp + _taskSubmissionDecisionDisputeTime
+        ) {
+            _task.closed = true;
+            _task.paid = false;
+            FundingsManager.fundUnlockAmount(_campaign.fundings, _task.reward);
         }
     }
 }

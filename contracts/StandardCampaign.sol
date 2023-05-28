@@ -3,7 +3,7 @@
 pragma solidity ^0.8.9;
 
 import "./Libraries.sol";
-import "./Icheckers.sol";
+import "./Iupmas.sol";
 
 contract StandardCampaign {
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
@@ -36,10 +36,11 @@ contract StandardCampaign {
     }
 
     // Checkers contract address
-    address public checkersAddress = address(0);
-    function setCheckersAddress(address _checkersAddress) public {
-        require(checkersAddress == address(0), "E51");
-        checkersAddress = _checkersAddress;
+    address public updateMasterAddress = address(0);
+
+    function setCheckersAddress(address _updateMasterAddress) public {
+        require(updateMasterAddress == address(0), "E51");
+        updateMasterAddress = _updateMasterAddress;
     }
 
     // Mapping of campaign IDs to campaigns, IDs are numbers starting from 0
@@ -52,7 +53,7 @@ contract StandardCampaign {
 
     // Mapping of task IDs to tasks, IDs are numbers starting from 0
     mapping(uint256 => TaskManager.Task) public tasks;
-    uint256 public taskCount;
+    uint256 public taskCount = 1;
 
     // Mapping of application IDs to applications, IDs are numbers starting from 0
     mapping(uint256 => ProjectManager.Application) public applications;
@@ -179,147 +180,136 @@ contract StandardCampaign {
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
     /// UPDATER FUNCTIONS ★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★
 
-    // Figure out where we are and where we should be and fix is needed ✅
-    function statusFixer(uint256 _id) public {
-        ProjectManager.Project storage project = projects[_id];
+    function new_statusFixer(uint256 _projectID) public returns (bool updated) {
+        (bool isGoing, ProjectManager.ProjectStatus goingTo) = Iupmas(
+            updateMasterAddress
+        ).whereToGo(_projectID);
 
-        // If we should be in settled but are in gate, then return
-        // moving to settled needs owner input so we'll just wait here
-        if (
-            projects[_id].whatStatusProjectShouldBeAt() ==
-            ProjectManager.ProjectStatus.Settled &&
-            project.status == ProjectManager.ProjectStatus.Gate
-        ) {
-            cleanUpNotClosedTasks(_id);
-            unlockTheFundsForAllProjectsPostCleanup(project.parentCampaign);
-            computeAllRewardsInCampaign(project.parentCampaign);
-            return;
-        } else {
-            // Iterate until we get to where we should be
-            while (
-                projects[_id].whatStatusProjectShouldBeAt() != project.status
-            ) {
-                updateProjectStatus(_id);
-                if (project.status == ProjectManager.ProjectStatus.Gate) {
-                    break;
-                }
+        ////////////////////////////////////////////
+        // If we're not going anywhere, then return
+        if (!isGoing) {
+            return false;
+        }
+
+        ////////////////////////////////////////////
+        // Settled -> Stage
+        if (goingTo == ProjectManager.ProjectStatus.Stage) {
+            // ✅ Adjust lateness before stage
+            adjustLatenessBeforeStage(_projectID);
+            // ✅ Update the project status and return updated = true
+            projects[_projectID].status = ProjectManager.ProjectStatus.Stage;
+            return true;
+        }
+        ////////////////////////////////////////////
+        // Stage -> Gate
+        else if (goingTo == ProjectManager.ProjectStatus.Gate) {
+            // ✅  Close tasks with no submissions
+            // Get tasks with no submissions
+            uint256[] noneTasksInProject = Iupmas(updateMasterAddress)
+                .getNoneTasksIDs(_projectID);
+            for (uint256 i = 0; i < noneTasksInProject.length; i++) {
+                // Delete the taskss
+                Utilities.deleteItemInUintArray(
+                    noneTasksInProject[i],
+                    projects[_projectID].childTasks
+                );
             }
-            cleanUpNotClosedTasks(_id);
-            unlockTheFundsForAllProjectsPostCleanup(project.parentCampaign);
-            computeAllRewardsInCampaign(project.parentCampaign);
+            // ✅ Update the project status and return updated = true
+            projects[_projectID].status = ProjectManager.ProjectStatus.Gate;
+            return true;
         }
-    }
-
-    // Update project STATUS ✅
-    function updateProjectStatus(
-        uint256 _id
-    )
-        public
-        isProjectRunning(_id)
-        isCampaignRunning(projects[_id].parentCampaign)
-    {
-        checkProjectExists(_id);
-        ProjectManager.Project storage project = projects[_id];
-
-        // GOING INTO STAGE 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
-        if (project.status == ProjectManager.ProjectStatus.Settled) {
-            (bool toStage, bool toStageFastForward) = Icheckers(checkersAddress).toStageConditions(_id);
-            if (toStageFastForward) {
-                // update project status
-                project.status = ProjectManager.ProjectStatus.Stage;
-                return;
-                // delete all votes
-                // delete project.fastForward;
-            } else if (toStage) {
-                // adjust lateness
-                adjustLatenessBeforeStage(_id);
-                // update project status
-                project.status = ProjectManager.ProjectStatus.Stage;
-                return;
-                // delete all votes
-                // delete project.fastForward;
-
+        ////////////////////////////////////////////
+        // Gate -> PostSub
+        else if (goingTo == ProjectManager.ProjectStatus.PostSub) {
+            // ✅ Pending tasks are paid, marked as such and deleted
+            // Get the pending tasks
+            uint256[] pendingTasksInProject = Iupmas(updateMasterAddress)
+                .getPendingTasksIDs(_projectID);
+            CampaignManager.Campaign storage campaign = campaigns[
+                projects[_projectID].parentCampaign
+            ];
+            // Pay the pending tasks, mark them as paid and delete them
+            for (uint256 i = 0; i < pendingTasksInProject.length; i++) {
+                TaskManager storage task = tasks[pendingTasksInProject[i]];
+                uint256 toPay = ((projects[_projectID].reward * task.weight) /
+                    100);
+                // Mark the task as paid
+                task.paid = true;
+                // Remove from project reward and campaign locked
+                projects[_projectID].reward -= toPay;
+                FundingsManager.fundUseAmount(campaign.fundings, toPay);
+                // Pay the task
+                task.worker.transfer(toPay);
+                // Delete the taskss
+                Utilities.deleteItemInUintArray(
+                    pendingTasksInProject[i],
+                    projects[_projectID].childTasks
+                );
             }
+            // ✅ Declined tasks aren't touched
+            // ✅ Update the project status and return updated = true
+            projects[_projectID].status = ProjectManager.ProjectStatus.PostSub;
+            return true;
         }
-        // GOING INTO GATE 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
-        else if (project.status == ProjectManager.ProjectStatus.Stage) {
-            (bool toGate, bool toGateFastForward) = Icheckers(checkersAddress).toGateConditions(_id);
-            if (toGateFastForward) {
-                // update project status
-                project.status = ProjectManager.ProjectStatus.Gate;
-                return;
-                // delete all votes
-                // delete project.fastForward;
-                
-            } else if (toGate) {
-                // update project status
-                project.status = ProjectManager.ProjectStatus.Gate;
-                return;
-                // delete all votes
-                // delete project.fastForward;
-                
+        ////////////////////////////////////////////
+        // PostSub -> PostDisp
+        else if (goingTo == ProjectManager.ProjectStatus.PostDisp) {
+            // ✅ Get the declined tasks in the project
+            uint256[] declinedTasksInProject = Iupmas(updateMasterAddress)
+                .getDeclinedTasksIDs(_projectID);
+            // ✅ Declined tasks are deleted
+            for (uint256 i = 0; i < declinedTasksInProject.length; i++) {
+                Utilities.deleteItemInUintArray(
+                    declinedTasksInProject[i],
+                    projects[_projectID].childTasks
+                );
             }
+            // ✅ Unspent money is unlocked
+            CampaignManager.Campaign storage campaign = campaigns[
+                projects[_projectID].parentCampaign
+            ];
+            campaign.fundings.fundUnlockAmount(projects[_projectID].reward);
+            // ✅ Disputed tasks are not touched -> they are still disputed, funds are still locked
+            // ✅ Rewards are updated for the project (not locked yet just for informative purposes)
+            projects[_projectID].reward = Iupmas(updateMasterAddress)
+                .computeProjectReward(_projectID);
+            // Update the project status and return updated = true
+            projects[_projectID].status = ProjectManager.ProjectStatus.PostDisp;
+            return true;
         }
-    }
-
-    // Unlock the funds for all projects that can have their funds unlocked ✅
-    function unlockTheFundsForAllProjectsPostCleanup(uint256 _id) internal {
-        CampaignManager.Campaign storage campaign = campaigns[_id];
-        for (uint256 i = 0; i < campaign.allChildProjects.length; i++) {
-            unlockTheFundsForProjectPostCleanup(campaign.allChildProjects[i]);
-        }
-    }
-
-    function unlockTheFundsForProjectPostCleanup(uint256 _id) internal {
-        ProjectManager.Project storage project = projects[_id];
-
-        // We must be past the decision time and dispute time
-        if (
-            block.timestamp <=
-            project.nextMilestone.startGateTimestamp +
-                taskSubmissionDecisionDisputeTime
-        ) {
-            return;
-        }
-
-        // Unlock the funds for the project
-        fundUnlockAmount(project.parentCampaign, project.reward);
-    }
-
-    // Unlock amounts of funds by going through each funding and unlocking until the expense is covered ✅
-    function fundUnlockAmount(uint256 _id, uint256 _expense) internal {
-        checkCampaignExists(_id);
-        CampaignManager.Campaign storage campaign = campaigns[_id];
-        campaign.fundings.fundUnlockAmount(_expense);
     }
 
     // Adjust lateness of Project before stage ✅
-    function adjustLatenessBeforeStage(uint256 _id) internal {
-        ProjectManager.Project storage project = projects[_id];
+    function adjustLatenessBeforeStage(uint256 _projectID) internal {
+        ProjectManager.Project storage project = projects[_projectID];
         uint256 lateness = 0;
 
-        // If we are late, add lateness to all tasks and nextmilestone
-        if (block.timestamp > project.nextMilestone.startStageTimestamp) {
+        // If we are late to start stage by more than 15 minutes, add lateness to all tasks and nextmilestone
+        if (
+            block.timestamp >
+            project.nextMilestone.startStageTimestamp + 15 minutes
+        ) {
             lateness =
                 block.timestamp -
                 project.nextMilestone.startStageTimestamp;
-        }
 
-        // Add lateness to all tasks
-        for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task storage task = tasks[project.childTasks[i]];
-            // Ensure we only update the open tasks which also have workers in for the stage
-            if (!task.closed && task.worker != address(0)) {
-                task.deadline += lateness; // add lateness to deadline
+            // Add lateness to all tasks
+            for (uint256 i = 0; i < project.childTasks.length; i++) {
+                TaskManager.Task storage task = tasks[project.childTasks[i]];
+                // Ensure we only update the open tasks which also have workers in for the stage
+                if (!task.closed && task.worker != address(0)) {
+                    task.deadline += lateness; // add lateness to deadline
+                }
             }
-        }
 
-        // add lateness to nextmilestone
-        project.nextMilestone.startGateTimestamp += lateness;
-        project.nextMilestone.startSettledTimestamp += lateness;
+            // add lateness to nextmilestone
+            project.nextMilestone.startGateTimestamp += lateness;
+            project.nextMilestone.startSettledTimestamp += lateness;
+        }
     }
 
     // Close project ✅
+    // 🥶 nested projects must be closed first -> create toClosedConditions in update master !!!!!
     function closeProject(
         uint256 _id
     ) public isCampaignOwner(projects[_id].parentCampaign) {
@@ -327,19 +317,19 @@ contract StandardCampaign {
 
         ProjectManager.Project storage project = projects[_id];
 
-        require(project.status == ProjectManager.ProjectStatus.Gate, "E22");
+        require(
+            projects[_id].status == ProjectManager.ProjectStatus.PostDisp,
+            "E22"
+        );
         require(checkIsCampaignOwner(project.parentCampaign), "E23");
 
-        // Just to clear any loose ends
-        goToSettledStatus(_id, 0, 1, 2);
-
         project.status = ProjectManager.ProjectStatus.Closed;
-
-        // Clear fast forward votes
-        delete project.fastForward;
     }
 
-    // Go to settled ✅
+    // Go to settled 🥶
+    // 🥶 Update the project reward from bottom up
+    // 🥶 Lock funds to the level of the reward
+    // 🥶 Make sure task deadlines are not in the future, past the gate
     function goToSettledStatus(
         uint _id,
         uint256 _nextStageStartTimestamp,
@@ -363,7 +353,7 @@ contract StandardCampaign {
         ProjectManager.Project storage project = projects[_id];
 
         // Check conditions for going to settled
-        require(toSettledConditions(_id), "E24");
+        require(Iupmas(updateMasterAddress).toSettledConditions(_id), "E24");
         // Ensure sender is an owner of the campaign
         require(checkIsCampaignOwner(project.parentCampaign), "E25");
 
@@ -415,9 +405,6 @@ contract StandardCampaign {
 
         // Update project status
         project.status = ProjectManager.ProjectStatus.Settled;
-
-        // Clear fast forward votes
-        delete project.fastForward;
     }
 
     // Update project milestones 📍
@@ -456,127 +443,11 @@ contract StandardCampaign {
         project.nextMilestone = _nextMilestone;
     }
 
-    // Compute rewards for all projects and tasks in a campaign ✅
-    function computeAllRewardsInCampaign(
-        uint256 _id
-    ) public isCampaignRunning(_id) {
-        checkCampaignExists(projects[_id].parentCampaign);
-        // Get the campaign
-        CampaignManager.Campaign storage campaign = campaigns[_id];
-
-        // unlock the funds of the project -> inside check we're past decision time and dispute time
-
-        // Loop over all direct projects in the campaign
-        for (uint256 i = 0; i < campaign.directChildProjects.length; i++) {
-            uint256 projectId = campaign.directChildProjects[i];
-
-            // Compute rewards for the project and its tasks recursively
-            computeProjectRewards(projectId, campaign.getEffectiveBalance());
-        }
-    }
-
-    // Compute rewards for all projects and tasks in a campaign helper function ✅
-    function computeProjectRewards(
-        uint256 _id,
-        uint256 _fundsAtThatLevel
-    ) internal {
-        checkProjectExists(_id);
-        ProjectManager.Project storage project = projects[_id];
-        uint256 thisProjectReward;
-
-        if (project.status == ProjectManager.ProjectStatus.Closed) {
-            return;
-        }
-
-        // If the project is top level project
-        if (project.parentProject == _id) {
-            // Compute the reward for the project at this level
-            thisProjectReward = (_fundsAtThatLevel * project.weight) / 1000;
-            // If the project fulfills conditions, then actually update the reward
-            if (updateProjectRewardsConditions(_id)) {
-                project.reward = thisProjectReward;
-            }
-        } else {
-            // If the project is not a top level project take the reward
-            // given from the parent project computation
-            if (updateProjectRewardsConditions(_id)) {
-                project.reward = _fundsAtThatLevel;
-            }
-        }
-
-        // Updating tasks requires reward conditions to be met
-        if (updateProjectRewardsConditions(_id)) {
-            for (uint256 i = 0; i < project.childTasks[i]; i++) {
-                TaskManager.Task storage task = tasks[project.childTasks[i]];
-                // Compute the reward for each task at this level)
-                // Compute the reward based on the task's weight and the total weight
-                uint256 taskReward = (thisProjectReward * task.weight) / 1000;
-
-                // Update the task reward in storage
-                task.reward = taskReward;
-            }
-        }
-
-        // Compute the rewards for child projects
-        for (uint256 i = 0; i < project.childProjects.length; i++) {
-            uint256 childProjectId = project.childProjects[i];
-            ProjectManager.Project storage childProject = projects[
-                childProjectId
-            ];
-
-            // If project is NOT closed, then compute rewards
-            if (childProject.status != ProjectManager.ProjectStatus.Closed) {
-                // Calculate rewards for the child project
-                uint256 childProjectReward = (thisProjectReward *
-                    childProject.weight) / 1000;
-                // Compute rewards for the child project and its tasks recursively
-                computeProjectRewards(childProjectId, childProjectReward);
-            }
-        }
-    }
-
-    // Check if project can update the rewards ✅
-    function updateProjectRewardsConditions(
-        uint256 _id
-    ) public view returns (bool) {
-        ProjectManager.Project storage project = projects[_id];
-
-        bool atGate = project.status == ProjectManager.ProjectStatus.Gate ||
-            project.status == ProjectManager.ProjectStatus.Closed;
-        bool afterCleanup = block.timestamp >
-            project.nextMilestone.startGateTimestamp +
-                taskSubmissionDecisionDisputeTime;
-
-        // Ensure all conditions are met
-        return atGate && afterCleanup;
-    }
-
-    // Conditions for going to Settled ✅
-    function toSettledConditions(
-        uint256 _id
-    )
-        public
-        view
-        isProjectRunning(_id)
-        isCampaignRunning(projects[_id].parentCampaign)
-        returns (bool)
-    {
-        checkProjectExists(_id);
-        ProjectManager.Project storage project = projects[_id];
-
-        bool currentStatusValid = project.status ==
-            ProjectManager.ProjectStatus.Gate;
-        bool inSettledPeriod = block.timestamp >=
-            project.nextMilestone.startSettledTimestamp;
-
-        return currentStatusValid && inSettledPeriod;
-    }
-
     // Automatically accept decisions which have not received a submission and are past the decision time ✅
     // Also automatically close tasks which have received declined submissions
     // and weren't disputed within the dispute time
-    function cleanUpNotClosedTasks(uint256 _id) internal {
-        ProjectManager.Project storage project = projects[_id];
+    function cleanUpNotClosedTasks(uint256 _projectID) internal {
+        ProjectManager.Project storage project = projects[_projectID];
         CampaignManager.Campaign storage campaign = campaigns[
             project.parentCampaign
         ];
@@ -688,7 +559,6 @@ contract StandardCampaign {
         campaign.refundOwnFunding(_fundingID);
     }
 
-
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
     /// PROJECT WRITE FUNCTIONS 🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻
     // Create a new project ✅
@@ -732,32 +602,6 @@ contract StandardCampaign {
 
         projectCount++;
         return projectCount - 1;
-    }
-
-    // If sender is owner, acceptor or worker, append vote to fast forward status ✅
-    function voteFastForwardStatus(uint256 _id, bool _vote) public {
-        statusFixer(_id);
-        require(
-            checkIsCampaignAcceptor(projects[_id].parentCampaign) ||
-                checkIsCampaignOwner(projects[_id].parentCampaign) ||
-                checkIsProjectWorker(_id),
-            "E27"
-        );
-        ProjectManager.Project storage project = projects[_id];
-
-        bool voterFound = false;
-
-        for (uint256 i = 0; i < project.fastForward.length; i++) {
-            if (project.fastForward[i].voter == msg.sender) {
-                project.fastForward[i].vote = _vote;
-                voterFound = true;
-                break;
-            }
-        }
-
-        if (!voterFound) {
-            project.fastForward.push(ProjectManager.Vote(msg.sender, _vote));
-        }
     }
 
     // Worker drop out of project ✅
@@ -918,46 +762,6 @@ contract StandardCampaign {
     /// 🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳🔳
     /// PROJECT READ FUNCTIONS 🔹🔹🔹🔹🔹🔹🔹🔹🔹🔹
 
-    // Checks that voting conditions are met 🪿ported
-    function checkFastForwardStatus(uint256 _id) public view returns (bool) {
-        ProjectManager.Project storage project = projects[_id];
-
-        // Check for each vote in the fastForward array, if at least 1 owner
-        // and all workers voted true, and conditions are fulfilled,
-        // then move to next stage/gate/settled
-        uint256 ownerVotes = 0;
-        uint256 workerVotes = 0;
-        uint256 acceptorVotes = 0;
-
-        for (uint256 i = 0; i < project.fastForward.length; i++) {
-            if (
-                checkIsProjectWorker(_id, project.fastForward[i].voter) &&
-                project.fastForward[i].vote
-            ) {
-                workerVotes++;
-            } else {
-                return false;
-            }
-            if (
-                checkIsCampaignOwner(_id, project.fastForward[i].voter) &&
-                project.fastForward[i].vote
-            ) {
-                ownerVotes++;
-            }
-            if (
-                checkIsCampaignAcceptor(_id, project.fastForward[i].voter) &&
-                project.fastForward[i].vote
-            ) {
-                acceptorVotes++;
-            }
-        }
-
-        return
-            ownerVotes > 0 &&
-            acceptorVotes > 0 &&
-            project.workers.length <= workerVotes;
-    }
-
     // Check if sender is owner of campaign ✅
     function checkIsCampaignOwner(uint256 _id) public view returns (bool) {
         bool isOwner = false;
@@ -1058,6 +862,7 @@ contract StandardCampaign {
 
         TaskManager.Task storage task = tasks[taskCount];
 
+        task.id = taskCount;
         task.metadata = _metadata;
         task.weight = weight;
         task.creationTime = block.timestamp;
@@ -1223,39 +1028,49 @@ contract StandardCampaign {
     // Getter Functions
 
     // Get campaign by ID ✅
-    function getCampaign(uint256 _id)
-        public
-        view
-        returns (CampaignManager.Campaign memory)
-    {
+    function getCampaign(
+        uint256 _id
+    ) public view returns (CampaignManager.Campaign memory) {
         checkCampaignExists(_id);
         return campaigns[_id];
     }
 
     // Get projects by ID ✅
-    function getProject(uint256 _id)
-        public
-        view
-        returns (ProjectManager.Project memory)
-    {
+    function getProject(
+        uint256 _id
+    ) public view returns (ProjectManager.Project memory) {
         checkProjectExists(_id);
         return projects[_id];
     }
 
     // Get task by ID ✅
-    function getTask(uint256 _id) public view returns (TaskManager.Task memory) {
+    function getTask(
+        uint256 _id
+    ) public view returns (TaskManager.Task memory) {
         checkTaskExists(_id);
         return tasks[_id];
     }
 
     // Get application by ID ✅
-    function getApplication(uint256 _id)
-        public
-        view
-        returns (ProjectManager.Application memory)
-    {
+    function getApplication(
+        uint256 _id
+    ) public view returns (ProjectManager.Application memory) {
         checkApplicationExists(_id);
         return applications[_id];
+    }
+
+    // Get decision times
+    function getDecisionTimes()
+        public
+        view
+        returns (uint256, uint256, uint256, uint256)
+    {
+        return (
+            minimumGateTime,
+            taskSubmissionDecisionTime,
+            taskSubmissionDecisionDisputeTime,
+            minimumSettledTime
+        );
     }
 
     receive() external payable {}
