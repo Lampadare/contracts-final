@@ -601,3 +601,78 @@
             computeAllRewardsInCampaign(project.parentCampaign);
         }
     }
+
+        // Automatically accept decisions which have not received a submission and are past the decision time ✅
+    // Also automatically close tasks which have received declined submissions
+    // and weren't disputed within the dispute time
+    function cleanUpNotClosedTasks(uint256 _projectID) internal {
+        ProjectManager.Project storage project = projects[_projectID];
+        CampaignManager.Campaign storage campaign = campaigns[
+            project.parentCampaign
+        ];
+
+        for (uint256 i = 0; i < project.childTasks.length; i++) {
+            TaskManager.Task storage task = tasks[project.childTasks[i]];
+            task.cleanupTask(
+                campaign,
+                project.nextMilestone.startGateTimestamp,
+                taskSubmissionDecisionTime,
+                taskSubmissionDecisionDisputeTime
+            );
+        }
+    }
+
+    function cleanupTask(
+        Task storage _task,
+        CampaignManager.Campaign storage _campaign,
+        uint256 _startGateTimestamp,
+        uint256 _taskSubmissionDecisionTime,
+        uint256 _taskSubmissionDecisionDisputeTime
+    ) external {
+        // Must be in the correct decision time window
+        require(
+            block.timestamp > _startGateTimestamp + _taskSubmissionDecisionTime,
+            "E47"
+        );
+
+        // If the task received submission and the decision time window has passed
+        // but the submission is still pending, accept it, close it and pay the worker
+        if (_task.submissionStatus == SubmissionStatus.Pending) {
+            _task.submissionStatus = SubmissionStatus.Accepted;
+            _task.paid = true;
+            _task.worker.transfer(_task.reward);
+            FundingsManager.fundUseAmount(_campaign.fundings, _task.reward);
+        }
+
+        // If the task received submission, which was declined and the dispute time window
+        // has passed, decline it, close it and unlock the funds
+        if (
+            _task.submission.status == TaskManager.SubmissionStatus.Declined &&
+            block.timestamp >=
+            _startGateTimestamp + _taskSubmissionDecisionDisputeTime
+        ) {
+            _task.closed = true;
+            _task.paid = false;
+            FundingsManager.fundUnlockAmount(_campaign.fundings, _task.reward);
+        }
+    }
+
+
+    // If stake by sender is strictly superior than stake of current worker on task
+        // then remove current worker from task and assign sender to task
+        // if (task.worker != address(0)) {
+        //     if (
+        //         getApplicationByApplicant(_id, task.worker).enrolStake.funding <
+        //         getApplicationByApplicant(_id, msg.sender).enrolStake.funding
+        //     ) {
+        //         // Remove worker from task
+        //         task.worker = payable(address(0));
+        //         // Assign sender to task
+        //         task.worker = payable(msg.sender);
+        //         return;
+        //     } else {
+        //         return;
+        //     }
+        // } else {
+        // Assign sender to task
+        //}

@@ -513,7 +513,7 @@ library ProjectManager {
         // Populate project
         _project.metadata = _metadata;
         _project.creationTime = block.timestamp;
-        _project.status = ProjectManager.ProjectStatus.Gate;
+        _project.status = ProjectManager.ProjectStatus.PostDisp;
         _project.nextMilestone = ProjectManager.NextMilestone(0, 0, 0);
         _project.applicationRequired = _applicationRequired;
 
@@ -649,7 +649,7 @@ library ProjectManager {
         uint256 _id,
         uint256 _applicationCount
     ) external {
-        require(_project.applicationRequired, "E34");
+        require(_project.applicationRequired, "E51");
 
         // Creates application to deal with stake
 
@@ -780,43 +780,8 @@ library TaskManager {
     enum SubmissionStatus {
         None,
         Pending,
-        Accepted,
         Declined,
+        Accepted,
         Disputed
-    }
-
-    function cleanupTask(
-        Task storage _task,
-        CampaignManager.Campaign storage _campaign,
-        uint256 _startGateTimestamp,
-        uint256 _taskSubmissionDecisionTime,
-        uint256 _taskSubmissionDecisionDisputeTime
-    ) external {
-        // Must be in the correct decision time window
-        require(
-            block.timestamp > _startGateTimestamp + _taskSubmissionDecisionTime,
-            "E47"
-        );
-
-        // If the task received submission and the decision time window has passed
-        // but the submission is still pending, accept it, close it and pay the worker
-        if (_task.submissionStatus == SubmissionStatus.Pending) {
-            _task.submissionStatus = SubmissionStatus.Accepted;
-            _task.paid = true;
-            _task.worker.transfer(_task.reward);
-            FundingsManager.fundUseAmount(_campaign.fundings, _task.reward);
-        }
-
-        // If the task received submission, which was declined and the dispute time window
-        // has passed, decline it, close it and unlock the funds
-        if (
-            _task.submission.status == TaskManager.SubmissionStatus.Declined &&
-            block.timestamp >=
-            _startGateTimestamp + _taskSubmissionDecisionDisputeTime
-        ) {
-            _task.closed = true;
-            _task.paid = false;
-            FundingsManager.fundUnlockAmount(_campaign.fundings, _task.reward);
-        }
     }
 }

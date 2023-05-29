@@ -150,3 +150,9 @@ E50 =
 
 E51 =
 "Address must be set once"
+
+E52 =
+"Conditions for closed not fulfilled"
+
+E51 =
+"Applications are not required"

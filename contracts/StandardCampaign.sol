@@ -38,18 +38,18 @@ contract StandardCampaign {
     // Checkers contract address
     address public updateMasterAddress = address(0);
 
-    function setCheckersAddress(address _updateMasterAddress) public {
+    function setUpdateMasterAddress(address _updateMasterAddress) public {
         require(updateMasterAddress == address(0), "E51");
         updateMasterAddress = _updateMasterAddress;
     }
 
     // Mapping of campaign IDs to campaigns, IDs are numbers starting from 0
     mapping(uint256 => CampaignManager.Campaign) public campaigns;
-    uint256 public campaignCount;
+    uint256 public campaignCount = 1;
 
     // Mapping of project IDs to projects, IDs are numbers starting from 0
     mapping(uint256 => ProjectManager.Project) public projects;
-    uint256 public projectCount;
+    uint256 public projectCount = 1;
 
     // Mapping of task IDs to tasks, IDs are numbers starting from 0
     mapping(uint256 => TaskManager.Task) public tasks;
@@ -79,19 +79,19 @@ contract StandardCampaign {
     /// MODIFIERS
     // Timestamps
     function checkCampaignExists(uint256 _id) public view {
-        require(_id < campaignCount, "E1");
+        require(_id <= campaignCount, "E1");
     }
 
     function checkProjectExists(uint256 _id) public view {
-        require(_id < projectCount, "E1");
+        require(_id <= projectCount, "E1");
     }
 
     function checkTaskExists(uint256 _id) public view {
-        require(_id < taskCount, "E1");
+        require(_id <= taskCount, "E1");
     }
 
     function checkApplicationExists(uint256 _id) public view {
-        require(_id < applicationCount, "E1");
+        require(_id <= applicationCount, "E1");
     }
 
     // Campaign Roles
@@ -151,12 +151,6 @@ contract StandardCampaign {
         _;
     }
 
-    // Task Statuses
-    modifier isTaskNotClosed(uint256 _id) {
-        require(!tasks[_id].closed, "E14");
-        _;
-    }
-
     // Task Roles
     modifier isWorkerOnTask(uint256 _id) {
         require(msg.sender == tasks[_id].worker, "E15");
@@ -203,12 +197,16 @@ contract StandardCampaign {
         ////////////////////////////////////////////
         // Stage -> Gate
         else if (goingTo == ProjectManager.ProjectStatus.Gate) {
-            // ✅  Close tasks with no submissions
+            // ✅  Delete tasks with no submissions
             // Get tasks with no submissions
-            uint256[] noneTasksInProject = Iupmas(updateMasterAddress)
+            uint256[] memory noneTasksInProject = Iupmas(updateMasterAddress)
                 .getNoneTasksIDs(_projectID);
             for (uint256 i = 0; i < noneTasksInProject.length; i++) {
-                // Delete the taskss
+                // Only do the tasks that are not 0
+                if (noneTasksInProject[i] == 0) {
+                    continue;
+                }
+                // Delete the tasks
                 Utilities.deleteItemInUintArray(
                     noneTasksInProject[i],
                     projects[_projectID].childTasks
@@ -223,14 +221,21 @@ contract StandardCampaign {
         else if (goingTo == ProjectManager.ProjectStatus.PostSub) {
             // ✅ Pending tasks are paid, marked as such and deleted
             // Get the pending tasks
-            uint256[] pendingTasksInProject = Iupmas(updateMasterAddress)
-                .getPendingTasksIDs(_projectID);
+            uint256[] memory pendingTaskIDsInProject = Iupmas(
+                updateMasterAddress
+            ).getPendingTasksIDs(_projectID);
             CampaignManager.Campaign storage campaign = campaigns[
                 projects[_projectID].parentCampaign
             ];
             // Pay the pending tasks, mark them as paid and delete them
-            for (uint256 i = 0; i < pendingTasksInProject.length; i++) {
-                TaskManager storage task = tasks[pendingTasksInProject[i]];
+            for (uint256 i = 0; i < pendingTaskIDsInProject.length; i++) {
+                // Only do the tasks that are not 0
+                if (pendingTaskIDsInProject[i] == 0) {
+                    continue;
+                }
+                TaskManager.Task storage task = tasks[
+                    pendingTaskIDsInProject[i]
+                ];
                 uint256 toPay = ((projects[_projectID].reward * task.weight) /
                     100);
                 // Mark the task as paid
@@ -242,7 +247,7 @@ contract StandardCampaign {
                 task.worker.transfer(toPay);
                 // Delete the taskss
                 Utilities.deleteItemInUintArray(
-                    pendingTasksInProject[i],
+                    pendingTaskIDsInProject[i],
                     projects[_projectID].childTasks
                 );
             }
@@ -255,12 +260,17 @@ contract StandardCampaign {
         // PostSub -> PostDisp
         else if (goingTo == ProjectManager.ProjectStatus.PostDisp) {
             // ✅ Get the declined tasks in the project
-            uint256[] declinedTasksInProject = Iupmas(updateMasterAddress)
-                .getDeclinedTasksIDs(_projectID);
+            uint256[] memory declinedTaskIDsInProject = Iupmas(
+                updateMasterAddress
+            ).getDeclinedTasksIDs(_projectID);
             // ✅ Declined tasks are deleted
-            for (uint256 i = 0; i < declinedTasksInProject.length; i++) {
+            for (uint256 i = 0; i < declinedTaskIDsInProject.length; i++) {
+                // Only do the tasks that are not 0
+                if (declinedTaskIDsInProject[i] == 0) {
+                    continue;
+                }
                 Utilities.deleteItemInUintArray(
-                    declinedTasksInProject[i],
+                    declinedTaskIDsInProject[i],
                     projects[_projectID].childTasks
                 );
             }
@@ -297,7 +307,11 @@ contract StandardCampaign {
             for (uint256 i = 0; i < project.childTasks.length; i++) {
                 TaskManager.Task storage task = tasks[project.childTasks[i]];
                 // Ensure we only update the open tasks which also have workers in for the stage
-                if (!task.closed && task.worker != address(0)) {
+                if (
+                    task.submissionStatus !=
+                    TaskManager.SubmissionStatus.Disputed &&
+                    task.worker != address(0)
+                ) {
                     task.deadline += lateness; // add lateness to deadline
                 }
             }
@@ -309,27 +323,17 @@ contract StandardCampaign {
     }
 
     // Close project ✅
-    // 🥶 nested projects must be closed first -> create toClosedConditions in update master !!!!!
-    function closeProject(
-        uint256 _id
-    ) public isCampaignOwner(projects[_id].parentCampaign) {
+    function closeProject(uint256 _id) public {
         checkProjectExists(_id);
-
-        ProjectManager.Project storage project = projects[_id];
-
-        require(
-            projects[_id].status == ProjectManager.ProjectStatus.PostDisp,
-            "E22"
-        );
-        require(checkIsCampaignOwner(project.parentCampaign), "E23");
-
-        project.status = ProjectManager.ProjectStatus.Closed;
+        // Sender must be the campaign owner
+        require(checkIsCampaignOwner(projects[_id].parentCampaign), "E23");
+        // Project must fulfill the closed conditions
+        require(Iupmas(updateMasterAddress).toClosedConditions(_id), "E24");
+        // Update state
+        projects[_id].status = ProjectManager.ProjectStatus.Closed;
     }
 
-    // Go to settled 🥶
-    // 🥶 Update the project reward from bottom up
-    // 🥶 Lock funds to the level of the reward
-    // 🥶 Make sure task deadlines are not in the future, past the gate
+    // Go to settled ✅
     function goToSettledStatus(
         uint _id,
         uint256 _nextStageStartTimestamp,
@@ -339,24 +343,20 @@ contract StandardCampaign {
         public
         isCampaignRunning(projects[_id].parentCampaign)
         isProjectRunning(_id)
-        isProjectGate(_id)
     {
         checkProjectExists(_id);
-        // iscampaign running
-        statusFixer(_id);
-        // isproject running
-        //isgate
 
+        // Get the parent campaign and project
         CampaignManager.Campaign storage parentCampaign = campaigns[
             projects[_id].parentCampaign
         ];
         ProjectManager.Project storage project = projects[_id];
 
-        // Check conditions for going to settled
-        require(Iupmas(updateMasterAddress).toSettledConditions(_id), "E24");
+        // Check conditions
         // Ensure sender is an owner of the campaign
         require(checkIsCampaignOwner(project.parentCampaign), "E25");
-
+        // Check conditions for going to settled
+        require(Iupmas(updateMasterAddress).toSettledConditions(_id), "E24");
         // Ensure timestamps are in order
         require(
             _nextSettledStartTimestamp > _nextGateStartTimestamp &&
@@ -364,18 +364,15 @@ contract StandardCampaign {
             "E26"
         );
 
-        // Get latest task deadline
+        // Get latest task deadline, for updating milestones
         uint256 latestTaskDeadline = 0;
         for (uint256 i = 0; i < project.childTasks.length; i++) {
-            if (
-                tasks[project.childTasks[i]].deadline > latestTaskDeadline &&
-                !tasks[project.childTasks[i]].closed
-            ) {
+            if (tasks[project.childTasks[i]].deadline > latestTaskDeadline) {
                 latestTaskDeadline = tasks[project.childTasks[i]].deadline;
             }
         }
 
-        // Update project milestones
+        // Update milestones of the project
         typicalProjectMilestonesUpdate(
             _id,
             _nextStageStartTimestamp,
@@ -384,30 +381,33 @@ contract StandardCampaign {
             latestTaskDeadline
         );
 
-        // If task deadline is before timestamp of stage start and uncompleted
-        // then update deadline of task to be max of stage start and latest task deadline
-        // At this point, all deadlines should be between stage start and gate start
+        // If task deadline is before timestamp of stage start or after timestamp of gate start
+        //, put it to stage start. At this point, all deadlines should be between stage start and gate start
         for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task storage task = tasks[project.childTasks[i]];
             // Clear workers of unclosed tasks when going settled
-            task.worker = payable(address(0));
+            tasks[project.childTasks[i]].worker = payable(address(0));
             // If task deadline is before timestamp of stage start and uncompleted
-            if (task.deadline < project.nextMilestone.startStageTimestamp) {
-                task.deadline = Utilities.max(
-                    latestTaskDeadline,
-                    project.nextMilestone.startGateTimestamp - 1 seconds
-                );
+            if (
+                tasks[project.childTasks[i]].deadline <
+                project.nextMilestone.startStageTimestamp ||
+                tasks[project.childTasks[i]].deadline >
+                project.nextMilestone.startGateTimestamp
+            ) {
+                tasks[project.childTasks[i]].deadline =
+                    project.nextMilestone.startGateTimestamp -
+                    1 seconds;
             }
         }
 
+        // Update project reward before locking funds
+        project.reward = Iupmas(updateMasterAddress).computeProjectReward(_id);
         // Lock funds for the project
         parentCampaign.fundings.fundLockAmount(project.reward);
-
         // Update project status
         project.status = ProjectManager.ProjectStatus.Settled;
     }
 
-    // Update project milestones 📍
+    // Update project milestones ✅
     function typicalProjectMilestonesUpdate(
         uint256 _id,
         uint256 _nextStageStartTimestamp,
@@ -415,8 +415,6 @@ contract StandardCampaign {
         uint256 _nextSettledStartTimestamp,
         uint256 latestTaskDeadline
     ) private {
-        ProjectManager.Project storage project = projects[_id];
-
         // Upcoming milestones based on input
         ProjectManager.NextMilestone memory _nextMilestone = ProjectManager
             .NextMilestone(
@@ -440,27 +438,7 @@ contract StandardCampaign {
                 )
             );
 
-        project.nextMilestone = _nextMilestone;
-    }
-
-    // Automatically accept decisions which have not received a submission and are past the decision time ✅
-    // Also automatically close tasks which have received declined submissions
-    // and weren't disputed within the dispute time
-    function cleanUpNotClosedTasks(uint256 _projectID) internal {
-        ProjectManager.Project storage project = projects[_projectID];
-        CampaignManager.Campaign storage campaign = campaigns[
-            project.parentCampaign
-        ];
-
-        for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task storage task = tasks[project.childTasks[i]];
-            task.cleanupTask(
-                campaign,
-                project.nextMilestone.startGateTimestamp,
-                taskSubmissionDecisionTime,
-                taskSubmissionDecisionDisputeTime
-            );
-        }
+        projects[_id].nextMilestone = _nextMilestone;
     }
 
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
@@ -607,7 +585,6 @@ contract StandardCampaign {
     // Worker drop out of project ✅
     function workerDropOut(uint256 _projectId, uint256 _applicationId) public {
         checkProjectExists(_projectId);
-        statusFixer(_projectId);
 
         ProjectManager.Project storage project = projects[_projectId];
         ProjectManager.Application storage application = applications[
@@ -618,13 +595,13 @@ contract StandardCampaign {
     }
 
     // Remove worker from project by owner 📍
-    function fireWorker(
-        uint256 _projectId,
-        uint256 _applicationId
-    ) public isCampaignOwner(projects[_projectId].parentCampaign) {
+    function fireWorker(uint256 _projectId, uint256 _applicationId) public {
         checkProjectExists(_projectId);
-        // isOwner?
-        statusFixer(_projectId);
+        require(
+            checkIsCampaignOwner(projects[_projectId].parentCampaign),
+            "E3"
+        );
+
         ProjectManager.Project storage project = projects[_projectId];
         ProjectManager.Application storage application = applications[
             _applicationId
@@ -647,7 +624,6 @@ contract StandardCampaign {
     {
         checkProjectExists(_id);
         // iscampaignrunning
-        statusFixer(_id);
         // isprojectrunning
         // ismoneyintended
         // ismorethanenrolstake
@@ -677,30 +653,37 @@ contract StandardCampaign {
 
     // Apply to project to become Worker ✅
     function applyToProject(
-        uint256 _id,
+        uint256 _projectId,
         string memory _metadata,
         uint256 _stake
     )
         public
         payable
-        isCampaignRunning(projects[_id].parentCampaign)
-        isProjectRunning(_id)
+        isCampaignRunning(projects[_projectId].parentCampaign)
+        isProjectRunning(_projectId)
         isMoneyIntended(_stake)
         isMoreThanEnrolStake(_stake)
         returns (uint256)
     {
-        checkCampaignExists(projects[_id].parentCampaign);
-        checkProjectExists(_id);
-        statusFixer(_id);
+        checkCampaignExists(projects[_projectId].parentCampaign);
+        checkProjectExists(_projectId);
+        if (new_statusFixer(_projectId)) {
+            return 0;
+        }
 
-        ProjectManager.Project storage project = projects[_id];
+        ProjectManager.Project storage project = projects[_projectId];
         ProjectManager.Application storage application = applications[
             applicationCount
         ];
 
         require(!project.checkIsProjectWorker(), "E36");
 
-        project.applyToProject(application, _metadata, _id, applicationCount);
+        project.applyToProject(
+            application,
+            _metadata,
+            _projectId,
+            applicationCount
+        );
 
         applicationCount++;
         return applicationCount - 1;
@@ -717,7 +700,6 @@ contract StandardCampaign {
         )
     {
         checkProjectExists(applications[_applicationID].parentProject);
-        statusFixer(applications[_applicationID].parentProject);
         // campaignacceptor
         checkApplicationExists(_applicationID);
 
@@ -867,7 +849,6 @@ contract StandardCampaign {
         task.weight = weight;
         task.creationTime = block.timestamp;
         task.deadline = _deadline;
-        task.closed = false;
 
         // Add parent project to task and vice versa
         task.parentProject = _parentProjectID;
@@ -886,22 +867,19 @@ contract StandardCampaign {
         public
         isProjectRunning(tasks[_id].parentProject)
         isWorkerOnTask(_id)
-        isTaskNotClosed(_id)
         isProjectStage(tasks[_id].parentProject)
     {
         checkTaskExists(_id);
         checkProjectExists(tasks[_id].parentProject);
-        statusFixer(tasks[_id].parentProject);
 
         TaskManager.Task storage task = tasks[_id];
         require(task.deadline > block.timestamp, "E39");
 
         // Create submission, if it already exists, overwrite it
-        TaskManager.Submission storage submission = task.submission;
         // Attach the IPFS hash for metadata
-        submission.metadata = _metadata;
+        task.submission = _metadata;
         // Submission status is pending after submission
-        submission.status = TaskManager.SubmissionStatus.Pending;
+        task.submissionStatus = TaskManager.SubmissionStatus.Pending;
     }
 
     // Submission decision by acceptors ✅
@@ -912,49 +890,51 @@ contract StandardCampaign {
         public
         isProjectRunning(tasks[_id].parentProject)
         isCampaignAcceptor(projects[tasks[_id].parentProject].parentCampaign)
-        isTaskNotClosed(_id)
         isProjectGate(tasks[_id].parentProject)
     {
         checkTaskExists(_id);
         checkProjectExists(tasks[_id].parentProject);
-        statusFixer(tasks[_id].parentProject);
 
+        TaskManager.Task storage task = tasks[_id];
         ProjectManager.Project storage project = projects[
             tasks[_id].parentProject
         ];
-        // Campaign storage campaign = campaigns[project.parentCampaign];
-        TaskManager.Task storage task = tasks[_id];
-        TaskManager.Submission storage submission = task.submission;
+        CampaignManager.Campaign storage campaign = campaigns[
+            project.parentCampaign
+        ];
 
+        require(project.status == ProjectManager.ProjectStatus.Gate, "E40");
         require(
-            block.timestamp <
-                project.nextMilestone.startGateTimestamp +
-                    taskSubmissionDecisionTime,
-            "E40"
-        );
-        require(
-            submission.status == TaskManager.SubmissionStatus.Pending,
+            task.submissionStatus == TaskManager.SubmissionStatus.Pending,
             "E41"
         );
 
         // If decision is accepted, set submission status to accepted,
         // payout worker, update locked rewards and close task
         if (_accepted) {
-            submission.status = TaskManager.SubmissionStatus.Accepted;
+            // Calculate the amount to pay
+            uint256 toPay = (task.weight * project.reward) / 100;
+            // Set the task to accepted
+            task.submissionStatus = TaskManager.SubmissionStatus.Accepted;
+            // Set the task to paid
             task.paid = true;
-            task.closed = true;
-            task.worker.transfer(task.reward);
-            //campaign.lockedRewards -= task.reward;
+            // Reduce the project reward by the amount to pay
+            project.reward -= toPay;
+            // Update the locked rewards of the campaign
+            FundingsManager.fundUseAmount(campaign.fundings, toPay);
+            // Pay the worker
+            task.worker.transfer(toPay);
+            // Delete the task from the project
+            Utilities.deleteItemInUintArray(task.id, project.childTasks);
         } else {
-            submission.status = TaskManager.SubmissionStatus.Declined;
+            task.submissionStatus = TaskManager.SubmissionStatus.Declined;
         }
     }
 
     // Assign a worker to a task ✅
-    function workerSelfAssignsTask(uint256 _id) public isTaskNotClosed(_id) {
+    function workerSelfAssignsTask(uint256 _id) public {
         checkTaskExists(_id);
         checkProjectExists(tasks[_id].parentProject);
-        statusFixer(tasks[_id].parentProject);
 
         TaskManager.Task storage task = tasks[_id];
         ProjectManager.Project storage project = projects[task.parentProject];
@@ -966,25 +946,6 @@ contract StandardCampaign {
         );
 
         task.worker = payable(msg.sender);
-
-        // If stake by sender is strictly superior than stake of current worker on task
-        // then remove current worker from task and assign sender to task
-        // if (task.worker != address(0)) {
-        //     if (
-        //         getApplicationByApplicant(_id, task.worker).enrolStake.funding <
-        //         getApplicationByApplicant(_id, msg.sender).enrolStake.funding
-        //     ) {
-        //         // Remove worker from task
-        //         task.worker = payable(address(0));
-        //         // Assign sender to task
-        //         task.worker = payable(msg.sender);
-        //         return;
-        //     } else {
-        //         return;
-        //     }
-        // } else {
-        // Assign sender to task
-        //}
     }
 
     // Raise a dispute on a submission ✅
@@ -995,19 +956,16 @@ contract StandardCampaign {
         public
         isProjectRunning(tasks[_id].parentProject)
         isWorkerOnTask(_id)
-        isTaskNotClosed(_id)
         isProjectGate(tasks[_id].parentProject)
     {
         checkTaskExists(_id);
         checkProjectExists(tasks[_id].parentProject);
-        statusFixer(tasks[_id].parentProject);
 
         TaskManager.Task storage task = tasks[_id];
         ProjectManager.Project storage project = projects[task.parentProject];
-        TaskManager.Submission storage submission = task.submission;
 
         require(
-            submission.status == TaskManager.SubmissionStatus.Declined,
+            task.submissionStatus == TaskManager.SubmissionStatus.Declined,
             "E43"
         );
         require(
@@ -1017,8 +975,7 @@ contract StandardCampaign {
             "E44"
         );
 
-        submission.status = TaskManager.SubmissionStatus.Disputed;
-        task.closed = true;
+        task.submissionStatus = TaskManager.SubmissionStatus.Disputed;
         task.paid = false;
 
         dispute(_id, _metadata);

@@ -55,8 +55,13 @@ contract UpdateMaster {
                 return (false, project.status);
             }
         }
+        // We are in the PostDisp status -> maybe going to Settled
+        else {
+            return (false, project.status);
+        }
     }
 
+    // TASK ID ARRAY GETTERS ///////////
     // Get the array of IDs of pending tasks that should be closed
     function getPendingTasksIDs(
         uint256 _projectID
@@ -64,14 +69,18 @@ contract UpdateMaster {
         ProjectManager.Project memory project = Istacam(standardCampaignAddress)
             .getProject(_projectID);
 
-        uint256[] memory pendingTasks = new uint256[](0);
+        uint256[] memory pendingTasks = new uint256[](
+            project.childTasks.length
+        );
 
-        for (uint256 i = 0; i < project.tasks.length; i++) {
+        for (uint256 i = 0; i < project.childTasks.length; i++) {
             TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.tasks[i]);
+                .getTask(project.childTasks[i]);
 
             if (task.submissionStatus == TaskManager.SubmissionStatus.Pending) {
-                pendingTasks.push(task.id);
+                pendingTasks[i] = task.id;
+            } else {
+                pendingTasks[i] = 0;
             }
         }
 
@@ -87,14 +96,16 @@ contract UpdateMaster {
 
         uint256[] memory declinedTasks = new uint256[](0);
 
-        for (uint256 i = 0; i < project.tasks.length; i++) {
+        for (uint256 i = 0; i < project.childTasks.length; i++) {
             TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.tasks[i]);
+                .getTask(project.childTasks[i]);
 
             if (
                 task.submissionStatus == TaskManager.SubmissionStatus.Declined
             ) {
-                declinedTasks.push(task.id);
+                declinedTasks[i] = task.id;
+            } else {
+                declinedTasks[i] = 0;
             }
         }
 
@@ -108,20 +119,23 @@ contract UpdateMaster {
         ProjectManager.Project memory project = Istacam(standardCampaignAddress)
             .getProject(_projectID);
 
-        uint256[] memory noneTasks = new uint256[](0);
+        uint256[] memory noneTasks = new uint256[](project.childTasks.length);
 
-        for (uint256 i = 0; i < project.tasks.length; i++) {
+        for (uint256 i = 0; i < project.childTasks.length; i++) {
             TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.tasks[i]);
+                .getTask(project.childTasks[i]);
 
             if (task.submissionStatus == TaskManager.SubmissionStatus.None) {
-                noneTasks.push(task.id);
+                noneTasks[i] = task.id;
+            } else {
+                noneTasks[i] = 0;
             }
         }
 
         return noneTasks;
     }
 
+    // PROJECT REWARDS COMPUTATION ///////////
     // Compute project rewards by going up the tree
     function computeProjectReward(
         uint256 _projectID
@@ -131,12 +145,12 @@ contract UpdateMaster {
 
         CampaignManager.Campaign memory campaign = Istacam(
             standardCampaignAddress
-        ).getCampaign(project.campaignID);
+        ).getCampaign(project.parentCampaign);
 
-        uint256 campaignBalance = campaign.getEffectiveBalance();
+        uint256 campaignBalance = CampaignManager.getEffectiveBalance(campaign);
         uint256 cumulated_weight = project.weight;
         uint256 previous_projectID = _projectID;
-        uint256 next_projectID = project.parentProjectID;
+        uint256 next_projectID = project.parentProject;
         uint8 counter = 1;
 
         while (previous_projectID != next_projectID) {
@@ -147,14 +161,14 @@ contract UpdateMaster {
             cumulated_weight *= nextProject.weight;
 
             previous_projectID = next_projectID;
-            next_projectID = nextProject.parentProjectID;
+            next_projectID = nextProject.parentProject;
             counter++;
         }
 
         return (cumulated_weight * campaignBalance) / (100 ** counter);
     }
 
-    // STATUS CONDITIONS CHECKS
+    // STATUS CONDITIONS CHECKS ///////////
     // Conditions for going to Stage ✅
     function toStageConditions(uint256 _projectID) public view returns (bool) {
         ProjectManager.Project memory project = Istacam(standardCampaignAddress)
@@ -171,7 +185,7 @@ contract UpdateMaster {
         return (currentStatusValid && projectHasWorkers && inStagePeriod);
     }
 
-    // Conditions for going to Gate 🪿ported
+    // Conditions for going to Gate ✅
     function toGateConditions(uint256 _projectID) public view returns (bool) {
         ProjectManager.Project memory project = Istacam(standardCampaignAddress)
             .getProject(_projectID);
@@ -245,7 +259,30 @@ contract UpdateMaster {
         return currentStatusValid && inSettledPeriod;
     }
 
-    // ROLES CHECKS
+    // Conditions for going to Closed ✅
+    function toClosedConditions(uint256 _projectID) public view returns (bool) {
+        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
+            .getProject(_projectID);
+
+        bool currentStatusValid = project.status ==
+            ProjectManager.ProjectStatus.PostDisp;
+        bool childProjectsClosed = true;
+
+        for (uint256 i = 0; i < project.childProjects.length; i++) {
+            if (
+                Istacam(standardCampaignAddress)
+                    .getProject(project.childProjects[i])
+                    .status != ProjectManager.ProjectStatus.Closed
+            ) {
+                childProjectsClosed = false;
+                break;
+            }
+        }
+
+        return currentStatusValid && childProjectsClosed;
+    }
+
+    // ROLES CHECKS ///////////
     // Check if address is worker of project ✅s
     function checkIsProjectWorker(
         uint256 _id,
