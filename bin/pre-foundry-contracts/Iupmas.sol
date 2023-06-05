@@ -42,10 +42,6 @@ interface Iupmas {
         uint256 _projectID
     ) external view returns (uint256[] memory);
 
-    function getDisputedTasksIDs(
-        uint256 _projectID
-    ) external view returns (uint256[] memory);
-
     // WHERE TO GO
     function whereToGo(
         uint256 _projectID

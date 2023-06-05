@@ -20,7 +20,7 @@ contract StandardCampaign {
 
     /// DEVELOPER FUNCTIONS (ONLY FOR TESTING) 🧑‍💻🧑‍💻🧑‍💻🧑‍💻🧑‍💻
     address public contractMaster;
-    event Dispute(uint256 _id, string _metadata, uint256 _taskReward);
+    event Dispute(uint256 _id, string _metadata);
 
     constructor() payable {
         contractMaster = payable(msg.sender);
@@ -32,16 +32,7 @@ contract StandardCampaign {
     }
 
     function dispute(uint256 _id, string memory _metadata) public {
-        TaskManager.Task storage task = tasks[_id];
-        require(task.worker == msg.sender, "Sender isnt worker");
-        require(
-            task.submissionStatus == TaskManager.SubmissionStatus.Declined,
-            "Task isnt declined"
-        );
-        task.submissionStatus = TaskManager.SubmissionStatus.Disputed;
-        uint256 _taskReward = ((projects[task.parentProject].reward *
-            task.weight) / 100);
-        emit Dispute(_id, _metadata, _taskReward);
+        emit Dispute(_id, _metadata);
     }
 
     // Checkers contract address
@@ -77,11 +68,11 @@ contract StandardCampaign {
 
     // Minimum time to settle a project
     uint256 public minimumSettledTime = 1 days;
-    // Minimum time to end to end gate a project (Sub+Disp included)
+    // Minimum time to gate a project
     uint256 public minimumGateTime = 2.5 days;
     // Within gate, maximum time to decide on submissions
     uint256 public taskSubmissionDecisionTime = 1 days;
-    // Within gate, maximum time to dispute a submission decision (encompasses taskSubmissionDecisionTime)
+    // Within stage, maximum time to dispute a submission decision (encompasses taskSubmissionDecisionTime)
     uint256 public taskSubmissionDecisionDisputeTime = 2 days;
 
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
@@ -283,29 +274,12 @@ contract StandardCampaign {
                     projects[_projectID].childTasks
                 );
             }
-            // ✅ Disputed tasks are not touched -> they are still disputed, funds are still locked
-            uint256[] memory disputedTaskIDsInProject = Iupmas(
-                updateMasterAddress
-            ).getDisputedTasksIDs(_projectID);
-            // ✅ Get the disputed tasks in the project
-            for (uint256 i = 0; i < disputedTaskIDsInProject.length; i++) {
-                // Only do the tasks that are not 0
-                if (disputedTaskIDsInProject[i] == 0) {
-                    continue;
-                }
-                // Compute the reward for the task
-                uint256 _taskReward = ((projects[_projectID].reward *
-                    tasks[disputedTaskIDsInProject[i]].weight) / 100);
-                // Remove the disputed task's reward value from project reward
-                // This makes it "spent" without spending, thus ensuring it is always there
-                projects[_projectID].reward -= _taskReward;
-            }
             // ✅ Unspent money is unlocked
             CampaignManager.Campaign storage campaign = campaigns[
                 projects[_projectID].parentCampaign
             ];
-            // Unlock the funds
             campaign.fundings.fundUnlockAmount(projects[_projectID].reward);
+            // ✅ Disputed tasks are not touched -> they are still disputed, funds are still locked
             // ✅ Rewards are updated for the project (not locked yet just for informative purposes)
             projects[_projectID].reward = Iupmas(updateMasterAddress)
                 .computeProjectReward(_projectID);

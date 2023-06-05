@@ -135,33 +135,6 @@ contract UpdateMaster {
         return noneTasks;
     }
 
-    // Get the array of IDs of "disputed" tasks that should not lose their funds
-    function getDisputedTasksIDs(
-        uint256 _projectID
-    ) public view returns (uint256[] memory) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
-
-        uint256[] memory disputedTasks = new uint256[](
-            project.childTasks.length
-        );
-
-        for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.childTasks[i]);
-
-            if (
-                task.submissionStatus == TaskManager.SubmissionStatus.Disputed
-            ) {
-                disputedTasks[i] = task.id;
-            } else {
-                disputedTasks[i] = 0;
-            }
-        }
-
-        return disputedTasks;
-    }
-
     // PROJECT REWARDS COMPUTATION ///////////
     // Compute project rewards by going up the tree
     function computeProjectReward(
