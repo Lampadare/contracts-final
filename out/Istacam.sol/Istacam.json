@@ -1,0 +1,1493 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_applicationID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getApplication",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "applicant",
+              "type": "address"
+            },
+            {
+              "internalType": "bool",
+              "name": "accepted",
+              "type": "bool"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address payable",
+                  "name": "funder",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "funding",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountUsed",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountLocked",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "fullyRefunded",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct FundingsManager.Fundings",
+              "name": "enrolStake",
+              "type": "tuple"
+            },
+            {
+              "internalType": "uint256",
+              "name": "parentProject",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ProjectManager.Application",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_campaignID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCampaign",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "creationTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "enum CampaignManager.CampaignStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "address payable",
+              "name": "creator",
+              "type": "address"
+            },
+            {
+              "internalType": "address payable[]",
+              "name": "owners",
+              "type": "address[]"
+            },
+            {
+              "internalType": "address payable[]",
+              "name": "acceptors",
+              "type": "address[]"
+            },
+            {
+              "internalType": "address payable[]",
+              "name": "allTimeStakeholders",
+              "type": "address[]"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address payable",
+                  "name": "funder",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "funding",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountUsed",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountLocked",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "fullyRefunded",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct FundingsManager.Fundings",
+              "name": "stake",
+              "type": "tuple"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "address payable",
+                  "name": "funder",
+                  "type": "address"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "funding",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountUsed",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "amountLocked",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "fullyRefunded",
+                  "type": "bool"
+                }
+              ],
+              "internalType": "struct FundingsManager.Fundings[]",
+              "name": "fundings",
+              "type": "tuple[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "directChildProjects",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "allChildProjects",
+              "type": "uint256[]"
+            }
+          ],
+          "internalType": "struct CampaignManager.Campaign",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getDecisionTimes",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_projectID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getProject",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "weight",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "reward",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "creationTime",
+              "type": "uint256"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "startStageTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "startGateTimestamp",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "startSettledTimestamp",
+                  "type": "uint256"
+                }
+              ],
+              "internalType": "struct ProjectManager.NextMilestone",
+              "name": "nextMilestone",
+              "type": "tuple"
+            },
+            {
+              "internalType": "enum ProjectManager.ProjectStatus",
+              "name": "status",
+              "type": "uint8"
+            },
+            {
+              "internalType": "bool",
+              "name": "applicationRequired",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "applications",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "address[]",
+              "name": "workers",
+              "type": "address[]"
+            },
+            {
+              "internalType": "address[]",
+              "name": "pastWorkers",
+              "type": "address[]"
+            },
+            {
+              "internalType": "uint256",
+              "name": "parentCampaign",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "parentProject",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "childProjects",
+              "type": "uint256[]"
+            },
+            {
+              "internalType": "uint256[]",
+              "name": "childTasks",
+              "type": "uint256[]"
+            }
+          ],
+          "internalType": "struct ProjectManager.Project",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_taskID",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTask",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "id",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "metadata",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "weight",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "paid",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "creationTime",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "deadline",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address payable",
+              "name": "worker",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "submission",
+              "type": "string"
+            },
+            {
+              "internalType": "enum TaskManager.SubmissionStatus",
+              "name": "submissionStatus",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "parentProject",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct TaskManager.Task",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "getApplication(uint256)": "1f2f4bfd",
+    "getCampaign(uint256)": "5598f8cc",
+    "getDecisionTimes()": "aa15d5f0",
+    "getProject(uint256)": "f0f3f2c8",
+    "getTask(uint256)": "1d65e77e"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_applicationID\",\"type\":\"uint256\"}],\"name\":\"getApplication\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"applicant\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"accepted\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings\",\"name\":\"enrolStake\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"}],\"internalType\":\"struct ProjectManager.Application\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_campaignID\",\"type\":\"uint256\"}],\"name\":\"getCampaign\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"internalType\":\"enum CampaignManager.CampaignStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"address payable\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"address payable[]\",\"name\":\"owners\",\"type\":\"address[]\"},{\"internalType\":\"address payable[]\",\"name\":\"acceptors\",\"type\":\"address[]\"},{\"internalType\":\"address payable[]\",\"name\":\"allTimeStakeholders\",\"type\":\"address[]\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings\",\"name\":\"stake\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings[]\",\"name\":\"fundings\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256[]\",\"name\":\"directChildProjects\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"allChildProjects\",\"type\":\"uint256[]\"}],\"internalType\":\"struct CampaignManager.Campaign\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecisionTimes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getProject\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reward\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startStageTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startGateTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startSettledTimestamp\",\"type\":\"uint256\"}],\"internalType\":\"struct ProjectManager.NextMilestone\",\"name\":\"nextMilestone\",\"type\":\"tuple\"},{\"internalType\":\"enum ProjectManager.ProjectStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bool\",\"name\":\"applicationRequired\",\"type\":\"bool\"},{\"internalType\":\"uint256[]\",\"name\":\"applications\",\"type\":\"uint256[]\"},{\"internalType\":\"address[]\",\"name\":\"workers\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"pastWorkers\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"parentCampaign\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"childProjects\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"childTasks\",\"type\":\"uint256[]\"}],\"internalType\":\"struct ProjectManager.Project\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskID\",\"type\":\"uint256\"}],\"name\":\"getTask\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"paid\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"worker\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"submission\",\"type\":\"string\"},{\"internalType\":\"enum TaskManager.SubmissionStatus\",\"name\":\"submissionStatus\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"}],\"internalType\":\"struct TaskManager.Task\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Istacam.sol\":\"Istacam\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":eth-gas-reporter/=node_modules/eth-gas-reporter/\",\":forge-std/=lib/forge-std/src/\",\":hardhat/=node_modules/hardhat/\"]},\"sources\":{\"contracts/Istacam.sol\":{\"keccak256\":\"0x2d9c23fe3b0bec7c995139f77aed9bf38181d7dd6425babdf4de0bf29c142006\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://edd521d84f0d04a8e24b37d7879ff4d6fe2ff8285f1edfff22ddadbb96878f82\",\"dweb:/ipfs/QmS5S3Eav2pA4iFSGbMVbjv9AmNuXJn5KhPCiZhpMYFHqX\"]},\"contracts/Libraries.sol\":{\"keccak256\":\"0xc1440b4bf559fd7435deb3e535a580b35bc1ae6659a4bf5c999554526dfb12a6\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://6a81ba3e1db14f1d95d9c029ec406eab2ce7725b836eaa25a193e392873834d7\",\"dweb:/ipfs/QmQGocvdhyPBhNdAoiWfGL6wiPveopgJDwaX4aMAiU9J12\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.20+commit.a1b79de6"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_applicationID",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getApplication",
+          "outputs": [
+            {
+              "internalType": "struct ProjectManager.Application",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "address",
+                  "name": "applicant",
+                  "type": "address"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "accepted",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "struct FundingsManager.Fundings",
+                  "name": "enrolStake",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "address payable",
+                      "name": "funder",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "funding",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amountUsed",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amountLocked",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "fullyRefunded",
+                      "type": "bool"
+                    }
+                  ]
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "parentProject",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_campaignID",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getCampaign",
+          "outputs": [
+            {
+              "internalType": "struct CampaignManager.Campaign",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "creationTime",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "enum CampaignManager.CampaignStatus",
+                  "name": "status",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "address payable",
+                  "name": "creator",
+                  "type": "address"
+                },
+                {
+                  "internalType": "address payable[]",
+                  "name": "owners",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "address payable[]",
+                  "name": "acceptors",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "address payable[]",
+                  "name": "allTimeStakeholders",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "struct FundingsManager.Fundings",
+                  "name": "stake",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "address payable",
+                      "name": "funder",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "funding",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amountUsed",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amountLocked",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "fullyRefunded",
+                      "type": "bool"
+                    }
+                  ]
+                },
+                {
+                  "internalType": "struct FundingsManager.Fundings[]",
+                  "name": "fundings",
+                  "type": "tuple[]",
+                  "components": [
+                    {
+                      "internalType": "address payable",
+                      "name": "funder",
+                      "type": "address"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "funding",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amountUsed",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "amountLocked",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "fullyRefunded",
+                      "type": "bool"
+                    }
+                  ]
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "directChildProjects",
+                  "type": "uint256[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "allChildProjects",
+                  "type": "uint256[]"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getDecisionTimes",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_projectID",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getProject",
+          "outputs": [
+            {
+              "internalType": "struct ProjectManager.Project",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "weight",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "reward",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "creationTime",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "struct ProjectManager.NextMilestone",
+                  "name": "nextMilestone",
+                  "type": "tuple",
+                  "components": [
+                    {
+                      "internalType": "uint256",
+                      "name": "startStageTimestamp",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "startGateTimestamp",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "startSettledTimestamp",
+                      "type": "uint256"
+                    }
+                  ]
+                },
+                {
+                  "internalType": "enum ProjectManager.ProjectStatus",
+                  "name": "status",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "applicationRequired",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "applications",
+                  "type": "uint256[]"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "workers",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "address[]",
+                  "name": "pastWorkers",
+                  "type": "address[]"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "parentCampaign",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "parentProject",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "childProjects",
+                  "type": "uint256[]"
+                },
+                {
+                  "internalType": "uint256[]",
+                  "name": "childTasks",
+                  "type": "uint256[]"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "uint256",
+              "name": "_taskID",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "getTask",
+          "outputs": [
+            {
+              "internalType": "struct TaskManager.Task",
+              "name": "",
+              "type": "tuple",
+              "components": [
+                {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "string",
+                  "name": "metadata",
+                  "type": "string"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "weight",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "bool",
+                  "name": "paid",
+                  "type": "bool"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "creationTime",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "deadline",
+                  "type": "uint256"
+                },
+                {
+                  "internalType": "address payable",
+                  "name": "worker",
+                  "type": "address"
+                },
+                {
+                  "internalType": "string",
+                  "name": "submission",
+                  "type": "string"
+                },
+                {
+                  "internalType": "enum TaskManager.SubmissionStatus",
+                  "name": "submissionStatus",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint256",
+                  "name": "parentProject",
+                  "type": "uint256"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        ":ds-test/=lib/forge-std/lib/ds-test/src/",
+        ":eth-gas-reporter/=node_modules/eth-gas-reporter/",
+        ":forge-std/=lib/forge-std/src/",
+        ":hardhat/=node_modules/hardhat/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 1
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "contracts/Istacam.sol": "Istacam"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "contracts/Istacam.sol": {
+        "keccak256": "0x2d9c23fe3b0bec7c995139f77aed9bf38181d7dd6425babdf4de0bf29c142006",
+        "urls": [
+          "bzz-raw://edd521d84f0d04a8e24b37d7879ff4d6fe2ff8285f1edfff22ddadbb96878f82",
+          "dweb:/ipfs/QmS5S3Eav2pA4iFSGbMVbjv9AmNuXJn5KhPCiZhpMYFHqX"
+        ],
+        "license": "UNLICENSED"
+      },
+      "contracts/Libraries.sol": {
+        "keccak256": "0xc1440b4bf559fd7435deb3e535a580b35bc1ae6659a4bf5c999554526dfb12a6",
+        "urls": [
+          "bzz-raw://6a81ba3e1db14f1d95d9c029ec406eab2ce7725b836eaa25a193e392873834d7",
+          "dweb:/ipfs/QmQGocvdhyPBhNdAoiWfGL6wiPveopgJDwaX4aMAiU9J12"
+        ],
+        "license": "UNLICENSED"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "contracts/Istacam.sol",
+    "id": 1278,
+    "exportedSymbols": {
+      "CampaignManager": [
+        2808
+      ],
+      "FundingsManager": [
+        1821
+      ],
+      "Istacam": [
+        1277
+      ],
+      "ProjectManager": [
+        3673
+      ],
+      "TaskManager": [
+        3702
+      ],
+      "Utilities": [
+        1542
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "40:650:2",
+    "nodes": [
+      {
+        "id": 1232,
+        "nodeType": "PragmaDirective",
+        "src": "40:23:2",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          "^",
+          "0.8",
+          ".9"
+        ]
+      },
+      {
+        "id": 1233,
+        "nodeType": "ImportDirective",
+        "src": "65:25:2",
+        "nodes": [],
+        "absolutePath": "contracts/Libraries.sol",
+        "file": "./Libraries.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 1278,
+        "sourceUnit": 3703,
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "id": 1277,
+        "nodeType": "ContractDefinition",
+        "src": "92:597:2",
+        "nodes": [
+          {
+            "id": 1241,
+            "nodeType": "FunctionDefinition",
+            "src": "116:112:2",
+            "nodes": [],
+            "functionSelector": "5598f8cc",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getCampaign",
+            "nameLocation": "125:11:2",
+            "parameters": {
+              "id": 1236,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1235,
+                  "mutability": "mutable",
+                  "name": "_campaignID",
+                  "nameLocation": "154:11:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1241,
+                  "src": "146:19:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1234,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "146:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "136:35:2"
+            },
+            "returnParameters": {
+              "id": 1240,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1239,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1241,
+                  "src": "195:31:2",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Campaign_$1862_memory_ptr",
+                    "typeString": "struct CampaignManager.Campaign"
+                  },
+                  "typeName": {
+                    "id": 1238,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 1237,
+                      "name": "CampaignManager.Campaign",
+                      "nameLocations": [
+                        "195:15:2",
+                        "211:8:2"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 1862,
+                      "src": "195:24:2"
+                    },
+                    "referencedDeclaration": 1862,
+                    "src": "195:24:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Campaign_$1862_storage_ptr",
+                      "typeString": "struct CampaignManager.Campaign"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "194:33:2"
+            },
+            "scope": 1277,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 1249,
+            "nodeType": "FunctionDefinition",
+            "src": "234:108:2",
+            "nodes": [],
+            "functionSelector": "f0f3f2c8",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getProject",
+            "nameLocation": "243:10:2",
+            "parameters": {
+              "id": 1244,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1243,
+                  "mutability": "mutable",
+                  "name": "_projectID",
+                  "nameLocation": "271:10:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1249,
+                  "src": "263:18:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1242,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "263:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "253:34:2"
+            },
+            "returnParameters": {
+              "id": 1248,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1247,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1249,
+                  "src": "311:29:2",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Project_$2844_memory_ptr",
+                    "typeString": "struct ProjectManager.Project"
+                  },
+                  "typeName": {
+                    "id": 1246,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 1245,
+                      "name": "ProjectManager.Project",
+                      "nameLocations": [
+                        "311:14:2",
+                        "326:7:2"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 2844,
+                      "src": "311:22:2"
+                    },
+                    "referencedDeclaration": 2844,
+                    "src": "311:22:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Project_$2844_storage_ptr",
+                      "typeString": "struct ProjectManager.Project"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "310:31:2"
+            },
+            "scope": 1277,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 1257,
+            "nodeType": "FunctionDefinition",
+            "src": "348:96:2",
+            "nodes": [],
+            "functionSelector": "1d65e77e",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTask",
+            "nameLocation": "357:7:2",
+            "parameters": {
+              "id": 1252,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1251,
+                  "mutability": "mutable",
+                  "name": "_taskID",
+                  "nameLocation": "382:7:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1257,
+                  "src": "374:15:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1250,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "374:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "364:31:2"
+            },
+            "returnParameters": {
+              "id": 1256,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1255,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1257,
+                  "src": "419:23:2",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Task_$3695_memory_ptr",
+                    "typeString": "struct TaskManager.Task"
+                  },
+                  "typeName": {
+                    "id": 1254,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 1253,
+                      "name": "TaskManager.Task",
+                      "nameLocations": [
+                        "419:11:2",
+                        "431:4:2"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 3695,
+                      "src": "419:16:2"
+                    },
+                    "referencedDeclaration": 3695,
+                    "src": "419:16:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Task_$3695_storage_ptr",
+                      "typeString": "struct TaskManager.Task"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "418:25:2"
+            },
+            "scope": 1277,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 1265,
+            "nodeType": "FunctionDefinition",
+            "src": "450:120:2",
+            "nodes": [],
+            "functionSelector": "1f2f4bfd",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getApplication",
+            "nameLocation": "459:14:2",
+            "parameters": {
+              "id": 1260,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1259,
+                  "mutability": "mutable",
+                  "name": "_applicationID",
+                  "nameLocation": "491:14:2",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1265,
+                  "src": "483:22:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1258,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "483:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "473:38:2"
+            },
+            "returnParameters": {
+              "id": 1264,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1263,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1265,
+                  "src": "535:33:2",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_struct$_Application_$2863_memory_ptr",
+                    "typeString": "struct ProjectManager.Application"
+                  },
+                  "typeName": {
+                    "id": 1262,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 1261,
+                      "name": "ProjectManager.Application",
+                      "nameLocations": [
+                        "535:14:2",
+                        "550:11:2"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 2863,
+                      "src": "535:26:2"
+                    },
+                    "referencedDeclaration": 2863,
+                    "src": "535:26:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_struct$_Application_$2863_storage_ptr",
+                      "typeString": "struct ProjectManager.Application"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "534:35:2"
+            },
+            "scope": 1277,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 1276,
+            "nodeType": "FunctionDefinition",
+            "src": "576:111:2",
+            "nodes": [],
+            "functionSelector": "aa15d5f0",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getDecisionTimes",
+            "nameLocation": "585:16:2",
+            "parameters": {
+              "id": 1266,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "601:2:2"
+            },
+            "returnParameters": {
+              "id": 1275,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 1268,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1276,
+                  "src": "651:7:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1267,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "651:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1270,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1276,
+                  "src": "660:7:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1269,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "660:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1272,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1276,
+                  "src": "669:7:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1271,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "669:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 1274,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1276,
+                  "src": "678:7:2",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 1273,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "678:7:2",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "650:36:2"
+            },
+            "scope": 1277,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "Istacam",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          1277
+        ],
+        "name": "Istacam",
+        "nameLocation": "102:7:2",
+        "scope": 1278,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "UNLICENSED"
+  },
+  "id": 2
+}

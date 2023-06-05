@@ -676,3 +676,9 @@
         // } else {
         // Assign sender to task
         //}
+
+
+        struct Vote {
+        address voter;
+        bool vote;
+    }

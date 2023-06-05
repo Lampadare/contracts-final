@@ -477,11 +477,6 @@ library ProjectManager {
         uint256 startSettledTimestamp;
     }
 
-    struct Vote {
-        address voter;
-        bool vote;
-    }
-
     struct Application {
         // Description of the application
         string metadata;
