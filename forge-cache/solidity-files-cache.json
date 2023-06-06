@@ -234,8 +234,8 @@
       }
     },
     "contracts/StandardCampaign.sol": {
-      "lastModificationDate": 1686003736240,
-      "contentHash": "cf9d2195c4c4104fd52af4e1d14431a9",
+      "lastModificationDate": 1686015924443,
+      "contentHash": "9a798d3b252f0bce7ae531800cc69028",
       "sourceName": "contracts/StandardCampaign.sol",
       "solcConfig": {
         "settings": {
