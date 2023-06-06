@@ -682,3 +682,19 @@
         address voter;
         bool vote;
     }
+
+
+        // Refund all campaign fundings ✅
+    function refundAllCampaignFundings(uint256 _campaignID) public {
+        // ================= Checks ==================
+        ICheckerMaster(checkerMasterAddress).requireCampaignExisting(
+            _campaignID
+        );
+        ICheckerMaster(checkerMasterAddress).requireCampaignOwner(
+            _campaignID,
+            msg.sender
+        );
+        // ===========================================
+        CampaignManager.Campaign storage campaign = campaigns[_campaignID];
+        campaign.refundAllCampaignFundings();
+    }

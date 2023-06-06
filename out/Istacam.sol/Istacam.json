@@ -188,11 +188,6 @@
               "internalType": "uint256[]",
               "name": "directChildProjects",
               "type": "uint256[]"
-            },
-            {
-              "internalType": "uint256[]",
-              "name": "allChildProjects",
-              "type": "uint256[]"
             }
           ],
           "internalType": "struct CampaignManager.Campaign",
@@ -428,7 +423,7 @@
     "getProject(uint256)": "f0f3f2c8",
     "getTask(uint256)": "1d65e77e"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_applicationID\",\"type\":\"uint256\"}],\"name\":\"getApplication\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"applicant\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"accepted\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings\",\"name\":\"enrolStake\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"}],\"internalType\":\"struct ProjectManager.Application\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_campaignID\",\"type\":\"uint256\"}],\"name\":\"getCampaign\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"internalType\":\"enum CampaignManager.CampaignStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"address payable\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"address payable[]\",\"name\":\"owners\",\"type\":\"address[]\"},{\"internalType\":\"address payable[]\",\"name\":\"acceptors\",\"type\":\"address[]\"},{\"internalType\":\"address payable[]\",\"name\":\"allTimeStakeholders\",\"type\":\"address[]\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings\",\"name\":\"stake\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings[]\",\"name\":\"fundings\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256[]\",\"name\":\"directChildProjects\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"allChildProjects\",\"type\":\"uint256[]\"}],\"internalType\":\"struct CampaignManager.Campaign\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecisionTimes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getProject\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reward\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startStageTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startGateTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startSettledTimestamp\",\"type\":\"uint256\"}],\"internalType\":\"struct ProjectManager.NextMilestone\",\"name\":\"nextMilestone\",\"type\":\"tuple\"},{\"internalType\":\"enum ProjectManager.ProjectStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bool\",\"name\":\"applicationRequired\",\"type\":\"bool\"},{\"internalType\":\"uint256[]\",\"name\":\"applications\",\"type\":\"uint256[]\"},{\"internalType\":\"address[]\",\"name\":\"workers\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"pastWorkers\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"parentCampaign\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"childProjects\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"childTasks\",\"type\":\"uint256[]\"}],\"internalType\":\"struct ProjectManager.Project\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskID\",\"type\":\"uint256\"}],\"name\":\"getTask\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"paid\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"worker\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"submission\",\"type\":\"string\"},{\"internalType\":\"enum TaskManager.SubmissionStatus\",\"name\":\"submissionStatus\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"}],\"internalType\":\"struct TaskManager.Task\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Istacam.sol\":\"Istacam\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":eth-gas-reporter/=node_modules/eth-gas-reporter/\",\":forge-std/=lib/forge-std/src/\",\":hardhat/=node_modules/hardhat/\"]},\"sources\":{\"contracts/Istacam.sol\":{\"keccak256\":\"0x2d9c23fe3b0bec7c995139f77aed9bf38181d7dd6425babdf4de0bf29c142006\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://edd521d84f0d04a8e24b37d7879ff4d6fe2ff8285f1edfff22ddadbb96878f82\",\"dweb:/ipfs/QmS5S3Eav2pA4iFSGbMVbjv9AmNuXJn5KhPCiZhpMYFHqX\"]},\"contracts/Libraries.sol\":{\"keccak256\":\"0xc1440b4bf559fd7435deb3e535a580b35bc1ae6659a4bf5c999554526dfb12a6\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://6a81ba3e1db14f1d95d9c029ec406eab2ce7725b836eaa25a193e392873834d7\",\"dweb:/ipfs/QmQGocvdhyPBhNdAoiWfGL6wiPveopgJDwaX4aMAiU9J12\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_applicationID\",\"type\":\"uint256\"}],\"name\":\"getApplication\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"applicant\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"accepted\",\"type\":\"bool\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings\",\"name\":\"enrolStake\",\"type\":\"tuple\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"}],\"internalType\":\"struct ProjectManager.Application\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_campaignID\",\"type\":\"uint256\"}],\"name\":\"getCampaign\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"internalType\":\"enum CampaignManager.CampaignStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"address payable\",\"name\":\"creator\",\"type\":\"address\"},{\"internalType\":\"address payable[]\",\"name\":\"owners\",\"type\":\"address[]\"},{\"internalType\":\"address payable[]\",\"name\":\"acceptors\",\"type\":\"address[]\"},{\"internalType\":\"address payable[]\",\"name\":\"allTimeStakeholders\",\"type\":\"address[]\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings\",\"name\":\"stake\",\"type\":\"tuple\"},{\"components\":[{\"internalType\":\"address payable\",\"name\":\"funder\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"funding\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountUsed\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amountLocked\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"fullyRefunded\",\"type\":\"bool\"}],\"internalType\":\"struct FundingsManager.Fundings[]\",\"name\":\"fundings\",\"type\":\"tuple[]\"},{\"internalType\":\"uint256[]\",\"name\":\"directChildProjects\",\"type\":\"uint256[]\"}],\"internalType\":\"struct CampaignManager.Campaign\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getDecisionTimes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getProject\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"reward\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"components\":[{\"internalType\":\"uint256\",\"name\":\"startStageTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startGateTimestamp\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"startSettledTimestamp\",\"type\":\"uint256\"}],\"internalType\":\"struct ProjectManager.NextMilestone\",\"name\":\"nextMilestone\",\"type\":\"tuple\"},{\"internalType\":\"enum ProjectManager.ProjectStatus\",\"name\":\"status\",\"type\":\"uint8\"},{\"internalType\":\"bool\",\"name\":\"applicationRequired\",\"type\":\"bool\"},{\"internalType\":\"uint256[]\",\"name\":\"applications\",\"type\":\"uint256[]\"},{\"internalType\":\"address[]\",\"name\":\"workers\",\"type\":\"address[]\"},{\"internalType\":\"address[]\",\"name\":\"pastWorkers\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"parentCampaign\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"},{\"internalType\":\"uint256[]\",\"name\":\"childProjects\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"childTasks\",\"type\":\"uint256[]\"}],\"internalType\":\"struct ProjectManager.Project\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_taskID\",\"type\":\"uint256\"}],\"name\":\"getTask\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"metadata\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"weight\",\"type\":\"uint256\"},{\"internalType\":\"bool\",\"name\":\"paid\",\"type\":\"bool\"},{\"internalType\":\"uint256\",\"name\":\"creationTime\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\"},{\"internalType\":\"address payable\",\"name\":\"worker\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"submission\",\"type\":\"string\"},{\"internalType\":\"enum TaskManager.SubmissionStatus\",\"name\":\"submissionStatus\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"parentProject\",\"type\":\"uint256\"}],\"internalType\":\"struct TaskManager.Task\",\"name\":\"\",\"type\":\"tuple\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Istacam.sol\":\"Istacam\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":eth-gas-reporter/=node_modules/eth-gas-reporter/\",\":forge-std/=lib/forge-std/src/\",\":hardhat/=node_modules/hardhat/\"]},\"sources\":{\"contracts/Istacam.sol\":{\"keccak256\":\"0x2d9c23fe3b0bec7c995139f77aed9bf38181d7dd6425babdf4de0bf29c142006\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://edd521d84f0d04a8e24b37d7879ff4d6fe2ff8285f1edfff22ddadbb96878f82\",\"dweb:/ipfs/QmS5S3Eav2pA4iFSGbMVbjv9AmNuXJn5KhPCiZhpMYFHqX\"]},\"contracts/Libraries.sol\":{\"keccak256\":\"0x25ea70a2a252f25759f6f8c8d264e0a7498113123929794204a73e97f4a113ec\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://25f1a6f172990aef18a9a5f7dc8f488082d8b589538b2cd25ece2e41dd5a817d\",\"dweb:/ipfs/QmXHm1TqEK7aEcdgDt2iDrY4LPseQkisW1EY8yFDgR9K4y\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
       "version": "0.8.20+commit.a1b79de6"
@@ -628,11 +623,6 @@
                 {
                   "internalType": "uint256[]",
                   "name": "directChildProjects",
-                  "type": "uint256[]"
-                },
-                {
-                  "internalType": "uint256[]",
-                  "name": "allChildProjects",
                   "type": "uint256[]"
                 }
               ]
@@ -887,10 +877,10 @@
         "license": "UNLICENSED"
       },
       "contracts/Libraries.sol": {
-        "keccak256": "0xc1440b4bf559fd7435deb3e535a580b35bc1ae6659a4bf5c999554526dfb12a6",
+        "keccak256": "0x25ea70a2a252f25759f6f8c8d264e0a7498113123929794204a73e97f4a113ec",
         "urls": [
-          "bzz-raw://6a81ba3e1db14f1d95d9c029ec406eab2ce7725b836eaa25a193e392873834d7",
-          "dweb:/ipfs/QmQGocvdhyPBhNdAoiWfGL6wiPveopgJDwaX4aMAiU9J12"
+          "bzz-raw://25f1a6f172990aef18a9a5f7dc8f488082d8b589538b2cd25ece2e41dd5a817d",
+          "dweb:/ipfs/QmXHm1TqEK7aEcdgDt2iDrY4LPseQkisW1EY8yFDgR9K4y"
         ],
         "license": "UNLICENSED"
       }
@@ -902,7 +892,7 @@
     "id": 1278,
     "exportedSymbols": {
       "CampaignManager": [
-        2808
+        2805
       ],
       "FundingsManager": [
         1821
@@ -911,10 +901,10 @@
         1277
       ],
       "ProjectManager": [
-        3673
+        3670
       ],
       "TaskManager": [
-        3702
+        3767
       ],
       "Utilities": [
         1542
@@ -944,7 +934,7 @@
         "file": "./Libraries.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 1278,
-        "sourceUnit": 3703,
+        "sourceUnit": 3768,
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -1014,7 +1004,7 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Campaign_$1862_memory_ptr",
+                    "typeIdentifier": "t_struct$_Campaign_$1859_memory_ptr",
                     "typeString": "struct CampaignManager.Campaign"
                   },
                   "typeName": {
@@ -1028,13 +1018,13 @@
                         "211:8:2"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 1862,
+                      "referencedDeclaration": 1859,
                       "src": "195:24:2"
                     },
-                    "referencedDeclaration": 1862,
+                    "referencedDeclaration": 1859,
                     "src": "195:24:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Campaign_$1862_storage_ptr",
+                      "typeIdentifier": "t_struct$_Campaign_$1859_storage_ptr",
                       "typeString": "struct CampaignManager.Campaign"
                     }
                   },
@@ -1109,7 +1099,7 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Project_$2844_memory_ptr",
+                    "typeIdentifier": "t_struct$_Project_$2841_memory_ptr",
                     "typeString": "struct ProjectManager.Project"
                   },
                   "typeName": {
@@ -1123,13 +1113,13 @@
                         "326:7:2"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 2844,
+                      "referencedDeclaration": 2841,
                       "src": "311:22:2"
                     },
-                    "referencedDeclaration": 2844,
+                    "referencedDeclaration": 2841,
                     "src": "311:22:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Project_$2844_storage_ptr",
+                      "typeIdentifier": "t_struct$_Project_$2841_storage_ptr",
                       "typeString": "struct ProjectManager.Project"
                     }
                   },
@@ -1204,7 +1194,7 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Task_$3695_memory_ptr",
+                    "typeIdentifier": "t_struct$_Task_$3692_memory_ptr",
                     "typeString": "struct TaskManager.Task"
                   },
                   "typeName": {
@@ -1218,13 +1208,13 @@
                         "431:4:2"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 3695,
+                      "referencedDeclaration": 3692,
                       "src": "419:16:2"
                     },
-                    "referencedDeclaration": 3695,
+                    "referencedDeclaration": 3692,
                     "src": "419:16:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Task_$3695_storage_ptr",
+                      "typeIdentifier": "t_struct$_Task_$3692_storage_ptr",
                       "typeString": "struct TaskManager.Task"
                     }
                   },
@@ -1299,7 +1289,7 @@
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_struct$_Application_$2863_memory_ptr",
+                    "typeIdentifier": "t_struct$_Application_$2860_memory_ptr",
                     "typeString": "struct ProjectManager.Application"
                   },
                   "typeName": {
@@ -1313,13 +1303,13 @@
                         "550:11:2"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 2863,
+                      "referencedDeclaration": 2860,
                       "src": "535:26:2"
                     },
-                    "referencedDeclaration": 2863,
+                    "referencedDeclaration": 2860,
                     "src": "535:26:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_struct$_Application_$2863_storage_ptr",
+                      "typeIdentifier": "t_struct$_Application_$2860_storage_ptr",
                       "typeString": "struct ProjectManager.Application"
                     }
                   },

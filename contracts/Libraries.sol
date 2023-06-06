@@ -189,7 +189,6 @@ library CampaignManager {
         FundingsManager.Fundings[] fundings;
         // Child projects & All child projects (contains IDs)
         uint256[] directChildProjects;
-        uint256[] allChildProjects;
     }
 
     enum CampaignStatus {
@@ -778,5 +777,27 @@ library TaskManager {
         Declined,
         Accepted,
         Disputed
+    }
+
+    // Write Functions
+    // Project Creation Function ✅
+    function makeTask(
+        Task storage _task,
+        uint256 _id,
+        string memory _metadata,
+        uint256 weight,
+        uint256 _deadline,
+        uint256 _parentProjectID
+    ) external {
+        require(_deadline > block.timestamp, "E38");
+
+        // Populate task
+        _task.id = _id;
+        _task.metadata = _metadata;
+        _task.weight = weight;
+        _task.paid = false;
+        _task.creationTime = block.timestamp;
+        _task.deadline = _deadline;
+        _task.parentProject = _parentProjectID;
     }
 }

@@ -98,7 +98,7 @@
       }
     },
     "contracts/Istacam.sol": {
-      "lastModificationDate": 1685982758159,
+      "lastModificationDate": 1686001883297,
       "contentHash": "8a6fa7ee660229847b81cd04ea154b49",
       "sourceName": "contracts/Istacam.sol",
       "solcConfig": {
@@ -182,8 +182,8 @@
       }
     },
     "contracts/Libraries.sol": {
-      "lastModificationDate": 1685997273562,
-      "contentHash": "73d8bfe329c94f0ec96da78246599909",
+      "lastModificationDate": 1686003591975,
+      "contentHash": "7ac76fb638378e9f4a44832d7167bfe8",
       "sourceName": "contracts/Libraries.sol",
       "solcConfig": {
         "settings": {
@@ -234,8 +234,8 @@
       }
     },
     "contracts/StandardCampaign.sol": {
-      "lastModificationDate": 1685999442300,
-      "contentHash": "3501067766fc09b8b71652b05098772e",
+      "lastModificationDate": 1686003736240,
+      "contentHash": "cf9d2195c4c4104fd52af4e1d14431a9",
       "sourceName": "contracts/StandardCampaign.sol",
       "solcConfig": {
         "settings": {
@@ -278,7 +278,7 @@
       }
     },
     "contracts/UpdateMaster.sol": {
-      "lastModificationDate": 1685998354131,
+      "lastModificationDate": 1686003530243,
       "contentHash": "46f08034ab5627f9f601bf45fecc75d8",
       "sourceName": "contracts/UpdateMaster.sol",
       "solcConfig": {
@@ -1054,7 +1054,7 @@
       }
     },
     "test/foundry/StandardCampaign.t.sol": {
-      "lastModificationDate": 1685999758807,
+      "lastModificationDate": 1686000317136,
       "contentHash": "6ed1f0334891460d035a166da94bfda1",
       "sourceName": "test/foundry/StandardCampaign.t.sol",
       "solcConfig": {

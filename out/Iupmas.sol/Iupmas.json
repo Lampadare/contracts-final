@@ -258,7 +258,7 @@
     "toStageConditions(uint256)": "68365f54",
     "whereToGo(uint256)": "b2be86ad"
   },
-  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"computeProjectReward\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getDeclinedTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getDisputedTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getNoneTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getPendingTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toClosedConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toGateConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toPostDispConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toPostSubConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toSettledConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toStageConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"whereToGo\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isGoing\",\"type\":\"bool\"},{\"internalType\":\"enum ProjectManager.ProjectStatus\",\"name\":\"goingTo\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Iupmas.sol\":\"Iupmas\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":eth-gas-reporter/=node_modules/eth-gas-reporter/\",\":forge-std/=lib/forge-std/src/\",\":hardhat/=node_modules/hardhat/\"]},\"sources\":{\"contracts/Iupmas.sol\":{\"keccak256\":\"0xa82447309cab99a11a00290fee3a2bb067a73b33df7a61241717c26b523fc10b\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://8e9a5457e62b3589481a3eced41d37adbfbf63b4b3bc1c7ea7865fd5ed96f1e1\",\"dweb:/ipfs/QmcyMPRKBetthjryo5jXgG23MGBGBRT7pdM7zWUJyaWb3g\"]},\"contracts/Libraries.sol\":{\"keccak256\":\"0xc1440b4bf559fd7435deb3e535a580b35bc1ae6659a4bf5c999554526dfb12a6\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://6a81ba3e1db14f1d95d9c029ec406eab2ce7725b836eaa25a193e392873834d7\",\"dweb:/ipfs/QmQGocvdhyPBhNdAoiWfGL6wiPveopgJDwaX4aMAiU9J12\"]}},\"version\":1}",
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"computeProjectReward\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getDeclinedTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getDisputedTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getNoneTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"getPendingTasksIDs\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toClosedConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toGateConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toPostDispConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toPostSubConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toSettledConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"toStageConditions\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_projectID\",\"type\":\"uint256\"}],\"name\":\"whereToGo\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isGoing\",\"type\":\"bool\"},{\"internalType\":\"enum ProjectManager.ProjectStatus\",\"name\":\"goingTo\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Iupmas.sol\":\"Iupmas\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":1},\"remappings\":[\":ds-test/=lib/forge-std/lib/ds-test/src/\",\":eth-gas-reporter/=node_modules/eth-gas-reporter/\",\":forge-std/=lib/forge-std/src/\",\":hardhat/=node_modules/hardhat/\"]},\"sources\":{\"contracts/Iupmas.sol\":{\"keccak256\":\"0xa82447309cab99a11a00290fee3a2bb067a73b33df7a61241717c26b523fc10b\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://8e9a5457e62b3589481a3eced41d37adbfbf63b4b3bc1c7ea7865fd5ed96f1e1\",\"dweb:/ipfs/QmcyMPRKBetthjryo5jXgG23MGBGBRT7pdM7zWUJyaWb3g\"]},\"contracts/Libraries.sol\":{\"keccak256\":\"0x25ea70a2a252f25759f6f8c8d264e0a7498113123929794204a73e97f4a113ec\",\"license\":\"UNLICENSED\",\"urls\":[\"bzz-raw://25f1a6f172990aef18a9a5f7dc8f488082d8b589538b2cd25ece2e41dd5a817d\",\"dweb:/ipfs/QmXHm1TqEK7aEcdgDt2iDrY4LPseQkisW1EY8yFDgR9K4y\"]}},\"version\":1}",
   "metadata": {
     "compiler": {
       "version": "0.8.20+commit.a1b79de6"
@@ -540,10 +540,10 @@
         "license": "UNLICENSED"
       },
       "contracts/Libraries.sol": {
-        "keccak256": "0xc1440b4bf559fd7435deb3e535a580b35bc1ae6659a4bf5c999554526dfb12a6",
+        "keccak256": "0x25ea70a2a252f25759f6f8c8d264e0a7498113123929794204a73e97f4a113ec",
         "urls": [
-          "bzz-raw://6a81ba3e1db14f1d95d9c029ec406eab2ce7725b836eaa25a193e392873834d7",
-          "dweb:/ipfs/QmQGocvdhyPBhNdAoiWfGL6wiPveopgJDwaX4aMAiU9J12"
+          "bzz-raw://25f1a6f172990aef18a9a5f7dc8f488082d8b589538b2cd25ece2e41dd5a817d",
+          "dweb:/ipfs/QmXHm1TqEK7aEcdgDt2iDrY4LPseQkisW1EY8yFDgR9K4y"
         ],
         "license": "UNLICENSED"
       }
@@ -555,7 +555,7 @@
     "id": 1373,
     "exportedSymbols": {
       "CampaignManager": [
-        2808
+        2805
       ],
       "FundingsManager": [
         1821
@@ -564,10 +564,10 @@
         1372
       ],
       "ProjectManager": [
-        3673
+        3670
       ],
       "TaskManager": [
-        3702
+        3767
       ],
       "Utilities": [
         1542
@@ -597,7 +597,7 @@
         "file": "./Libraries.sol",
         "nameLocation": "-1:-1:-1",
         "scope": 1373,
-        "sourceUnit": 3703,
+        "sourceUnit": 3768,
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -1654,7 +1654,7 @@
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
-                    "typeIdentifier": "t_enum$_ProjectStatus_$2870",
+                    "typeIdentifier": "t_enum$_ProjectStatus_$2867",
                     "typeString": "enum ProjectManager.ProjectStatus"
                   },
                   "typeName": {
@@ -1668,13 +1668,13 @@
                         "1370:13:3"
                       ],
                       "nodeType": "IdentifierPath",
-                      "referencedDeclaration": 2870,
+                      "referencedDeclaration": 2867,
                       "src": "1355:28:3"
                     },
-                    "referencedDeclaration": 2870,
+                    "referencedDeclaration": 2867,
                     "src": "1355:28:3",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_enum$_ProjectStatus_$2870",
+                      "typeIdentifier": "t_enum$_ProjectStatus_$2867",
                       "typeString": "enum ProjectManager.ProjectStatus"
                     }
                   },

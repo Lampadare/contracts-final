@@ -7,7 +7,6 @@ import "./Iupmas.sol";
 import "./ICheckerMaster.sol";
 
 contract StandardCampaign {
-    /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
     /// STRUCTS DECLARATIONS
     using Utilities for uint256[];
     using Utilities for address[];
@@ -118,13 +117,15 @@ contract StandardCampaign {
             return false;
         }
 
+        ProjectManager.Project storage project = projects[_projectID];
+
         ////////////////////////////////////////////
         // Settled -> Stage
         if (goingTo == ProjectManager.ProjectStatus.Stage) {
             // ✅ Adjust lateness before stage
             adjustLatenessBeforeStage(_projectID);
             // ✅ Update the project status and return updated = true
-            projects[_projectID].status = ProjectManager.ProjectStatus.Stage;
+            project.status = ProjectManager.ProjectStatus.Stage;
             return true;
         }
         ////////////////////////////////////////////
@@ -142,11 +143,11 @@ contract StandardCampaign {
                 // Delete the tasks
                 Utilities.deleteItemInUintArray(
                     noneTasksInProject[i],
-                    projects[_projectID].childTasks
+                    project.childTasks
                 );
             }
             // ✅ Update the project status and return updated = true
-            projects[_projectID].status = ProjectManager.ProjectStatus.Gate;
+            project.status = ProjectManager.ProjectStatus.Gate;
             return true;
         }
         ////////////////////////////////////////////
@@ -158,7 +159,7 @@ contract StandardCampaign {
                 updateMasterAddress
             ).getPendingTasksIDs(_projectID);
             CampaignManager.Campaign storage campaign = campaigns[
-                projects[_projectID].parentCampaign
+                project.parentCampaign
             ];
             // Pay the pending tasks, mark them as paid and delete them
             for (uint256 i = 0; i < pendingTaskIDsInProject.length; i++) {
@@ -169,24 +170,23 @@ contract StandardCampaign {
                 TaskManager.Task storage task = tasks[
                     pendingTaskIDsInProject[i]
                 ];
-                uint256 toPay = ((projects[_projectID].reward * task.weight) /
-                    100);
+                uint256 toPay = ((project.reward * task.weight) / 100);
                 // Mark the task as paid
                 task.paid = true;
                 // Remove from project reward and campaign locked
-                projects[_projectID].reward -= toPay;
+                project.reward -= toPay;
                 FundingsManager.fundUseAmount(campaign.fundings, toPay);
                 // Pay the task
                 task.worker.transfer(toPay);
                 // Delete the taskss
                 Utilities.deleteItemInUintArray(
                     pendingTaskIDsInProject[i],
-                    projects[_projectID].childTasks
+                    project.childTasks
                 );
             }
             // ✅ Declined tasks aren't touched
             // ✅ Update the project status and return updated = true
-            projects[_projectID].status = ProjectManager.ProjectStatus.PostSub;
+            project.status = ProjectManager.ProjectStatus.PostSub;
             return true;
         }
         ////////////////////////////////////////////
@@ -204,7 +204,7 @@ contract StandardCampaign {
                 }
                 Utilities.deleteItemInUintArray(
                     declinedTaskIDsInProject[i],
-                    projects[_projectID].childTasks
+                    project.childTasks
                 );
             }
             // ✅ Disputed tasks are not touched -> they are still disputed, funds are still locked
@@ -218,23 +218,24 @@ contract StandardCampaign {
                     continue;
                 }
                 // Compute the reward for the task
-                uint256 _taskReward = ((projects[_projectID].reward *
+                uint256 _taskReward = ((project.reward *
                     tasks[disputedTaskIDsInProject[i]].weight) / 100);
                 // Remove the disputed task's reward value from project reward
                 // This makes it "spent" without spending, thus ensuring it is always there
-                projects[_projectID].reward -= _taskReward;
+                project.reward -= _taskReward;
             }
             // ✅ Unspent money is unlocked
             CampaignManager.Campaign storage campaign = campaigns[
-                projects[_projectID].parentCampaign
+                project.parentCampaign
             ];
             // Unlock the funds
-            campaign.fundings.fundUnlockAmount(projects[_projectID].reward);
+            campaign.fundings.fundUnlockAmount(project.reward);
             // ✅ Rewards are updated for the project (not locked yet just for informative purposes)
-            projects[_projectID].reward = Iupmas(updateMasterAddress)
-                .computeProjectReward(_projectID);
+            project.reward = Iupmas(updateMasterAddress).computeProjectReward(
+                _projectID
+            );
             // Update the project status and return updated = true
-            projects[_projectID].status = ProjectManager.ProjectStatus.PostDisp;
+            project.status = ProjectManager.ProjectStatus.PostDisp;
             return true;
         }
     }
@@ -403,7 +404,7 @@ contract StandardCampaign {
     }
 
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
-    /// CAMPAIGN WRITE FUNCTIONS 🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻
+    /// CAMPAIGN FUNCTIONS
     // Create a new campaign, optionally fund it ✅
     function makeCampaign(
         string memory _metadata,
@@ -459,9 +460,9 @@ contract StandardCampaign {
 
         if (_status == CampaignManager.CampaignStatus.Closed) {
             // require that all projects inside are closed
-            for (uint256 i = 0; i < campaign.allChildProjects.length; i++) {
+            for (uint256 i = 0; i < campaign.directChildProjects.length; i++) {
                 require(
-                    projects[campaign.allChildProjects[i]].status ==
+                    projects[campaign.directChildProjects[i]].status ==
                         ProjectManager.ProjectStatus.Closed,
                     "E20"
                 );
@@ -493,21 +494,6 @@ contract StandardCampaign {
         campaign.fundCampaign(_funding);
     }
 
-    // Refund all campaign fundings ✅
-    function refundAllCampaignFundings(uint256 _campaignID) public {
-        // ================= Checks ==================
-        ICheckerMaster(checkerMasterAddress).requireCampaignExisting(
-            _campaignID
-        );
-        ICheckerMaster(checkerMasterAddress).requireCampaignOwner(
-            _campaignID,
-            msg.sender
-        );
-        // ===========================================
-        CampaignManager.Campaign storage campaign = campaigns[_campaignID];
-        campaign.refundAllCampaignFundings();
-    }
-
     // Refund own funding ✅
     function refundOwnFunding(uint256 _campaignID, uint256 _fundingID) public {
         // ================= Checks ==================
@@ -524,7 +510,7 @@ contract StandardCampaign {
     }
 
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
-    /// PROJECT WRITE FUNCTIONS 🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻
+    /// PROJECT FUNCTIONS
     // Create a new project ✅
     function makeProject(
         string memory _metadata,
@@ -560,17 +546,16 @@ contract StandardCampaign {
 
         // If this is a top level project, set the parent project to itself
         if (_topLevel) {
-            projects[projectCount].parentProject = projectCount;
+            project.parentProject = projectCount;
             // In the PARENTS of THIS project being created, add THIS project to the child projects
             // If this is a top level project, add it in the parent campaign direct child projects
             parentCampaign.directChildProjects.push(projectCount);
-            parentCampaign.allChildProjects.push(projectCount);
         } else {
-            projects[projectCount].parentProject = _parentProjectId;
+            project.parentProject = _parentProjectId;
             // In the PARENTS of THIS project being created, add THIS project to the child projects
             // If this is not the top level project, add it to the parent project all child projects
             // Reference project in campaign
-            parentCampaign.allChildProjects.push(projectCount);
+            projects[_parentProjectId].childProjects.push(projectCount);
         }
 
         projectCount++;
@@ -756,7 +741,7 @@ contract StandardCampaign {
     }
 
     /// ⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️⬜️
-    /// TASK WRITE FUNCTIONS 🔻🔻🔻🔻🔻🔻🔻🔻🔻🔻
+    /// TASK FUNCTIONS
     // Create a new task
     function makeTask(
         string memory _metadata,
@@ -773,22 +758,19 @@ contract StandardCampaign {
             msg.sender
         );
         // ===========================================
-        require(_deadline > block.timestamp, "E38");
 
-        TaskManager.Task storage task = tasks[taskCount];
-
-        task.id = taskCount;
-        task.metadata = _metadata;
-        task.weight = weight;
-        task.creationTime = block.timestamp;
-        task.deadline = _deadline;
+        tasks[taskCount].makeTask(
+            taskCount,
+            _metadata,
+            weight,
+            _deadline,
+            _parentProjectID
+        );
 
         // Add parent project to task and vice versa
-        task.parentProject = _parentProjectID;
         projects[_parentProjectID].childTasks.push(taskCount);
 
         taskCount++;
-
         return taskCount - 1;
     }
 
@@ -804,15 +786,11 @@ contract StandardCampaign {
             msg.sender
         );
         // ===========================================
-
-        TaskManager.Task storage task = tasks[_taskID];
-        require(task.deadline > block.timestamp, "E39");
-
         // Create submission, if it already exists, overwrite it
         // Attach the IPFS hash for metadata
-        task.submission = _metadata;
+        tasks[_taskID].submission = _metadata;
         // Submission status is pending after submission
-        task.submissionStatus = TaskManager.SubmissionStatus.Pending;
+        tasks[_taskID].submissionStatus = TaskManager.SubmissionStatus.Pending;
     }
 
     // Submission decision by acceptors ✅
