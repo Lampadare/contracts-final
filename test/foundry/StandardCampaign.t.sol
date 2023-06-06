@@ -2,13 +2,13 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "../../contracts/StandardCampaign.sol";
+import "../../contracts/StandardSubstrate.sol";
 import "../../contracts/UpdateMaster.sol";
 import "../../contracts/CheckerMaster.sol";
 import "../../contracts/Libraries.sol";
 
-contract StandardCampaignTest is Test {
-    StandardCampaign public standardCampaign;
+contract standardSubstrateTest is Test {
+    StandardSubstrate public standardSubstrate;
     UpdateMaster public updateMaster;
     CheckerMaster public checkerMaster;
 
@@ -22,11 +22,11 @@ contract StandardCampaignTest is Test {
     function setUp() public {
         ////////////////////////////////////////
         // Setup Contracts
-        standardCampaign = new StandardCampaign();
-        updateMaster = new UpdateMaster(address(standardCampaign));
-        checkerMaster = new CheckerMaster(address(standardCampaign));
-        standardCampaign.setUpdateMasterAddress(address(updateMaster));
-        standardCampaign.setCheckerMasterAddress(address(checkerMaster));
+        standardSubstrate = new StandardSubstrate();
+        updateMaster = new UpdateMaster(address(standardSubstrate));
+        checkerMaster = new CheckerMaster(address(standardSubstrate));
+        standardSubstrate.setUpdateMasterAddress(address(updateMaster));
+        standardSubstrate.setCheckerMasterAddress(address(checkerMaster));
 
         ////////////////////////////////////////
         // Create Campaign 1 for setup
@@ -35,7 +35,7 @@ contract StandardCampaignTest is Test {
         _owners[0] = owner;
         address payable[] memory _acceptors = new address payable[](1);
         _acceptors[0] = acceptor;
-        standardCampaign.makeCampaign{value: 0.005 ether}(
+        standardSubstrate.makeCampaign{value: 0.005 ether}(
             "test campaign 1",
             _owners,
             _acceptors,
@@ -56,7 +56,7 @@ contract StandardCampaignTest is Test {
 
         vm.prank(owner);
         // Make a project
-        uint256 projectId = standardCampaign.makeProject(
+        uint256 projectId = standardSubstrate.makeProject(
             "test project 1",
             applicationsRequired,
             parentCampaignId,
@@ -72,7 +72,7 @@ contract StandardCampaignTest is Test {
         uint256 _deadline = 99999999999999;
         uint256 _parentProjectID = 1;
         // Make a task
-        uint256 taskId = standardCampaign.makeTask(
+        uint256 taskId = standardSubstrate.makeTask(
             _metadata,
             _weight,
             _deadline,
@@ -88,7 +88,7 @@ contract StandardCampaignTest is Test {
         address payable[] memory _acceptors = new address payable[](1);
         _acceptors[0] = acceptor;
 
-        standardCampaign.makeCampaign{value: 0.005 ether}(
+        standardSubstrate.makeCampaign{value: 0.005 ether}(
             "test",
             _owners,
             _acceptors,
@@ -108,7 +108,7 @@ contract StandardCampaignTest is Test {
         bool topLevel = true;
 
         // Make a project
-        uint256 projectId = standardCampaign.makeProject(
+        uint256 projectId = standardSubstrate.makeProject(
             "test project",
             applicationsRequired,
             parentCampaignId,
@@ -128,16 +128,15 @@ contract StandardCampaignTest is Test {
         uint256 stake = 0.01 ether;
 
         // Apply to the project
-        uint256 applicationId = standardCampaign.applyToProject{value: stake}(
+        uint256 applicationId = standardSubstrate.applyToProject{value: stake}(
             projectId,
             "test application",
             stake
         );
 
-        CampaignManager.Campaign memory campaign = standardCampaign.getCampaign(
-            campaignId
-        );
-        ProjectManager.Project memory project = standardCampaign.getProject(
+        CampaignManager.Campaign memory campaign = standardSubstrate
+            .getCampaign(campaignId);
+        ProjectManager.Project memory project = standardSubstrate.getProject(
             projectId
         );
     }
@@ -153,7 +152,7 @@ contract StandardCampaignTest is Test {
         uint256 stake = 0.01 ether;
 
         // Apply to the project
-        uint256 applicationId = standardCampaign.applyToProject{value: stake}(
+        uint256 applicationId = standardSubstrate.applyToProject{value: stake}(
             projectId,
             "test application",
             stake
@@ -161,7 +160,7 @@ contract StandardCampaignTest is Test {
 
         // Accept the applicant
         vm.prank(owner);
-        standardCampaign.applicationDecision(applicationId, true);
+        standardSubstrate.applicationDecision(applicationId, true);
         (applicationId);
     }
 
@@ -176,7 +175,7 @@ contract StandardCampaignTest is Test {
         uint256 stake = 0.01 ether;
 
         // Apply to the project
-        uint256 applicationId = standardCampaign.applyToProject{value: stake}(
+        uint256 applicationId = standardSubstrate.applyToProject{value: stake}(
             projectId,
             "test application",
             stake
@@ -184,7 +183,7 @@ contract StandardCampaignTest is Test {
 
         // Accept the applicant
         vm.prank(acceptor);
-        standardCampaign.applicationDecision(applicationId, true);
+        standardSubstrate.applicationDecision(applicationId, true);
         (applicationId);
     }
 }

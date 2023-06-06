@@ -3,10 +3,10 @@
 pragma solidity ^0.8.9;
 
 import "./Libraries.sol";
-import "./Iupmas.sol";
+import "./IUpdateMaster.sol";
 import "./ICheckerMaster.sol";
 
-contract StandardCampaign {
+contract StandardSubstrate {
     /// STRUCTS DECLARATIONS
     using Utilities for uint256[];
     using Utilities for address[];
@@ -107,7 +107,7 @@ contract StandardCampaign {
     /// UPDATER FUNCTIONS ★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★👀★
 
     function new_statusFixer(uint256 _projectID) public returns (bool updated) {
-        (bool isGoing, ProjectManager.ProjectStatus goingTo) = Iupmas(
+        (bool isGoing, ProjectManager.ProjectStatus goingTo) = IUpdateMaster(
             updateMasterAddress
         ).whereToGo(_projectID);
 
@@ -133,8 +133,9 @@ contract StandardCampaign {
         else if (goingTo == ProjectManager.ProjectStatus.Gate) {
             // ✅  Delete tasks with no submissions
             // Get tasks with no submissions
-            uint256[] memory noneTasksInProject = Iupmas(updateMasterAddress)
-                .getNoneTasksIDs(_projectID);
+            uint256[] memory noneTasksInProject = IUpdateMaster(
+                updateMasterAddress
+            ).getNoneTasksIDs(_projectID);
             for (uint256 i = 0; i < noneTasksInProject.length; i++) {
                 // Only do the tasks that are not 0
                 if (noneTasksInProject[i] == 0) {
@@ -155,7 +156,7 @@ contract StandardCampaign {
         else if (goingTo == ProjectManager.ProjectStatus.PostSub) {
             // ✅ Pending tasks are paid, marked as such and deleted
             // Get the pending tasks
-            uint256[] memory pendingTaskIDsInProject = Iupmas(
+            uint256[] memory pendingTaskIDsInProject = IUpdateMaster(
                 updateMasterAddress
             ).getPendingTasksIDs(_projectID);
             CampaignManager.Campaign storage campaign = campaigns[
@@ -193,7 +194,7 @@ contract StandardCampaign {
         // PostSub -> PostDisp
         else if (goingTo == ProjectManager.ProjectStatus.PostDisp) {
             // ✅ Get the declined tasks in the project
-            uint256[] memory declinedTaskIDsInProject = Iupmas(
+            uint256[] memory declinedTaskIDsInProject = IUpdateMaster(
                 updateMasterAddress
             ).getDeclinedTasksIDs(_projectID);
             // ✅ Declined tasks are deleted
@@ -208,7 +209,7 @@ contract StandardCampaign {
                 );
             }
             // ✅ Disputed tasks are not touched -> they are still disputed, funds are still locked
-            uint256[] memory disputedTaskIDsInProject = Iupmas(
+            uint256[] memory disputedTaskIDsInProject = IUpdateMaster(
                 updateMasterAddress
             ).getDisputedTasksIDs(_projectID);
             // ✅ Get the disputed tasks in the project
@@ -231,9 +232,8 @@ contract StandardCampaign {
             // Unlock the funds
             campaign.fundings.fundUnlockAmount(project.reward);
             // ✅ Rewards are updated for the project (not locked yet just for informative purposes)
-            project.reward = Iupmas(updateMasterAddress).computeProjectReward(
-                _projectID
-            );
+            project.reward = IUpdateMaster(updateMasterAddress)
+                .computeProjectReward(_projectID);
             // Update the project status and return updated = true
             project.status = ProjectManager.ProjectStatus.PostDisp;
             return true;
@@ -284,7 +284,7 @@ contract StandardCampaign {
         // ===========================================
         // Project must fulfill the closed conditions
         require(
-            Iupmas(updateMasterAddress).toClosedConditions(_projectID),
+            IUpdateMaster(updateMasterAddress).toClosedConditions(_projectID),
             "E24"
         );
         // Update state
@@ -314,7 +314,7 @@ contract StandardCampaign {
 
         // Check conditions for going to settled
         require(
-            Iupmas(updateMasterAddress).toSettledConditions(_projectID),
+            IUpdateMaster(updateMasterAddress).toSettledConditions(_projectID),
             "E24"
         );
         // Ensure timestamps are in order
@@ -360,9 +360,8 @@ contract StandardCampaign {
         }
 
         // Update project reward before locking funds
-        project.reward = Iupmas(updateMasterAddress).computeProjectReward(
-            _projectID
-        );
+        project.reward = IUpdateMaster(updateMasterAddress)
+            .computeProjectReward(_projectID);
         // Lock funds for the project
         parentCampaign.fundings.fundLockAmount(project.reward);
         // Update project status

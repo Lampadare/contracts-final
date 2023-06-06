@@ -3,25 +3,26 @@
 pragma solidity ^0.8.9;
 
 import "./Libraries.sol";
-import "./Istacam.sol";
+import "./IStandardSubstrate.sol";
 
 contract UpdateMaster {
-    address public standardCampaignAddress = address(0);
+    address public standardSubstrateAddress = address(0);
 
-    constructor(address _standardCampaignAddress) {
+    constructor(address _standardSubstrateAddress) {
         require(
-            standardCampaignAddress == address(0),
-            "standardCampaignAddress must be set once"
+            standardSubstrateAddress == address(0),
+            "standardSubstrateAddress must be set once"
         );
-        standardCampaignAddress = _standardCampaignAddress;
+        standardSubstrateAddress = _standardSubstrateAddress;
     }
 
     // Says if a project is going to change status and to which status
     function whereToGo(
         uint256 _projectID
     ) public view returns (bool isGoing, ProjectManager.ProjectStatus goingTo) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         // We are in the Settled status -> maybe going to Stage
         if (project.status == ProjectManager.ProjectStatus.Settled) {
@@ -66,16 +67,18 @@ contract UpdateMaster {
     function getPendingTasksIDs(
         uint256 _projectID
     ) public view returns (uint256[] memory) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         uint256[] memory pendingTasks = new uint256[](
             project.childTasks.length
         );
 
         for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.childTasks[i]);
+            TaskManager.Task memory task = IStandardSubstrate(
+                standardSubstrateAddress
+            ).getTask(project.childTasks[i]);
 
             if (task.submissionStatus == TaskManager.SubmissionStatus.Pending) {
                 pendingTasks[i] = task.id;
@@ -91,14 +94,16 @@ contract UpdateMaster {
     function getDeclinedTasksIDs(
         uint256 _projectID
     ) public view returns (uint256[] memory) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         uint256[] memory declinedTasks = new uint256[](0);
 
         for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.childTasks[i]);
+            TaskManager.Task memory task = IStandardSubstrate(
+                standardSubstrateAddress
+            ).getTask(project.childTasks[i]);
 
             if (
                 task.submissionStatus == TaskManager.SubmissionStatus.Declined
@@ -116,14 +121,16 @@ contract UpdateMaster {
     function getNoneTasksIDs(
         uint256 _projectID
     ) public view returns (uint256[] memory) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         uint256[] memory noneTasks = new uint256[](project.childTasks.length);
 
         for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.childTasks[i]);
+            TaskManager.Task memory task = IStandardSubstrate(
+                standardSubstrateAddress
+            ).getTask(project.childTasks[i]);
 
             if (task.submissionStatus == TaskManager.SubmissionStatus.None) {
                 noneTasks[i] = task.id;
@@ -139,16 +146,18 @@ contract UpdateMaster {
     function getDisputedTasksIDs(
         uint256 _projectID
     ) public view returns (uint256[] memory) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         uint256[] memory disputedTasks = new uint256[](
             project.childTasks.length
         );
 
         for (uint256 i = 0; i < project.childTasks.length; i++) {
-            TaskManager.Task memory task = Istacam(standardCampaignAddress)
-                .getTask(project.childTasks[i]);
+            TaskManager.Task memory task = IStandardSubstrate(
+                standardSubstrateAddress
+            ).getTask(project.childTasks[i]);
 
             if (
                 task.submissionStatus == TaskManager.SubmissionStatus.Disputed
@@ -167,11 +176,12 @@ contract UpdateMaster {
     function computeProjectReward(
         uint256 _projectID
     ) public view returns (uint256) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
-        CampaignManager.Campaign memory campaign = Istacam(
-            standardCampaignAddress
+        CampaignManager.Campaign memory campaign = IStandardSubstrate(
+            standardSubstrateAddress
         ).getCampaign(project.parentCampaign);
 
         uint256 campaignBalance = CampaignManager.getEffectiveBalance(campaign);
@@ -181,8 +191,8 @@ contract UpdateMaster {
         uint8 counter = 1;
 
         while (previous_projectID != next_projectID) {
-            ProjectManager.Project memory nextProject = Istacam(
-                standardCampaignAddress
+            ProjectManager.Project memory nextProject = IStandardSubstrate(
+                standardSubstrateAddress
             ).getProject(next_projectID);
 
             cumulated_weight *= nextProject.weight;
@@ -198,8 +208,9 @@ contract UpdateMaster {
     // STATUS CONDITIONS CHECKS ///////////
     // Conditions for going to Stage ✅
     function toStageConditions(uint256 _projectID) public view returns (bool) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         // Conditions for normal to stage
         bool currentStatusValid = project.status ==
@@ -214,8 +225,9 @@ contract UpdateMaster {
 
     // Conditions for going to Gate ✅
     function toGateConditions(uint256 _projectID) public view returns (bool) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         // Normal to gate conditions
         bool currentStatusValid = project.status ==
@@ -230,15 +242,16 @@ contract UpdateMaster {
     function toPostSubConditions(
         uint256 _projectID
     ) public view returns (bool) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         (
             uint256 minGate,
             uint256 taskSub,
             uint256 taskDisp,
             uint256 minSettled
-        ) = Istacam(standardCampaignAddress).getDecisionTimes();
+        ) = IStandardSubstrate(standardSubstrateAddress).getDecisionTimes();
 
         // Normal to PostSub conditions
         bool currentStatusValid = project.status ==
@@ -252,15 +265,16 @@ contract UpdateMaster {
     function toPostDispConditions(
         uint256 _projectID
     ) public view returns (bool) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         (
             uint256 minGate,
             uint256 taskSub,
             uint256 taskDisp,
             uint256 minSettled
-        ) = Istacam(standardCampaignAddress).getDecisionTimes();
+        ) = IStandardSubstrate(standardSubstrateAddress).getDecisionTimes();
 
         // Normal to PostDisp conditions
         bool currentStatusValid = project.status ==
@@ -275,8 +289,9 @@ contract UpdateMaster {
     function toSettledConditions(
         uint256 _projectID
     ) public view returns (bool) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         bool currentStatusValid = project.status ==
             ProjectManager.ProjectStatus.PostDisp;
@@ -288,8 +303,9 @@ contract UpdateMaster {
 
     // Conditions for going to Closed ✅
     function toClosedConditions(uint256 _projectID) public view returns (bool) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_projectID);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID);
 
         bool currentStatusValid = project.status ==
             ProjectManager.ProjectStatus.PostDisp;
@@ -297,7 +313,7 @@ contract UpdateMaster {
 
         for (uint256 i = 0; i < project.childProjects.length; i++) {
             if (
-                Istacam(standardCampaignAddress)
+                IStandardSubstrate(standardSubstrateAddress)
                     .getProject(project.childProjects[i])
                     .status != ProjectManager.ProjectStatus.Closed
             ) {
@@ -315,8 +331,9 @@ contract UpdateMaster {
         uint256 _id,
         address _address
     ) public view returns (bool) {
-        ProjectManager.Project memory project = Istacam(standardCampaignAddress)
-            .getProject(_id);
+        ProjectManager.Project memory project = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_id);
         bool isWorker = false;
         for (uint256 i = 0; i < project.workers.length; i++) {
             if (_address == project.workers[i]) {
@@ -332,8 +349,8 @@ contract UpdateMaster {
         uint256 _id,
         address _address
     ) public view returns (bool) {
-        CampaignManager.Campaign memory campaign = Istacam(
-            standardCampaignAddress
+        CampaignManager.Campaign memory campaign = IStandardSubstrate(
+            standardSubstrateAddress
         ).getCampaign(_id);
         bool isOwner = false;
         for (uint256 i = 0; i < campaign.owners.length; i++) {
@@ -350,8 +367,8 @@ contract UpdateMaster {
         uint256 _id,
         address _address
     ) public view returns (bool) {
-        CampaignManager.Campaign memory campaign = Istacam(
-            standardCampaignAddress
+        CampaignManager.Campaign memory campaign = IStandardSubstrate(
+            standardSubstrateAddress
         ).getCampaign(_id);
         bool isAcceptor = false;
         for (uint256 i = 0; i < campaign.acceptors.length; i++) {

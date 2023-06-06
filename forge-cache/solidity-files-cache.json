@@ -13,8 +13,8 @@
   },
   "files": {
     "contracts/CheckerMaster.sol": {
-      "lastModificationDate": 1685995106335,
-      "contentHash": "8403c0a645d2d9609ef7670e9c00db75",
+      "lastModificationDate": 1686054557798,
+      "contentHash": "ff1b0a22f8996b0a70f56ccf46bfd234",
       "sourceName": "contracts/CheckerMaster.sol",
       "solcConfig": {
         "settings": {
@@ -45,7 +45,7 @@
         }
       },
       "imports": [
-        "contracts/Istacam.sol",
+        "contracts/IStandardSubstrate.sol",
         "contracts/Libraries.sol"
       ],
       "versionRequirement": "^0.8.9",
@@ -97,10 +97,10 @@
         }
       }
     },
-    "contracts/Istacam.sol": {
-      "lastModificationDate": 1686001883297,
-      "contentHash": "8a6fa7ee660229847b81cd04ea154b49",
-      "sourceName": "contracts/Istacam.sol",
+    "contracts/IStandardSubstrate.sol": {
+      "lastModificationDate": 1686054569166,
+      "contentHash": "574728dbe6a8733ac8392ee1e148b68e",
+      "sourceName": "contracts/IStandardSubstrate.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -134,15 +134,15 @@
       ],
       "versionRequirement": "^0.8.9",
       "artifacts": {
-        "Istacam": {
-          "0.8.20+commit.a1b79de6.Darwin.appleclang": "Istacam.sol/Istacam.json"
+        "IStandardSubstrate": {
+          "0.8.20+commit.a1b79de6.Darwin.appleclang": "IStandardSubstrate.sol/IStandardSubstrate.json"
         }
       }
     },
-    "contracts/Iupmas.sol": {
-      "lastModificationDate": 1685982751203,
-      "contentHash": "dd0f7558ee69fa7a12f9834fec763e33",
-      "sourceName": "contracts/Iupmas.sol",
+    "contracts/IUpdateMaster.sol": {
+      "lastModificationDate": 1686054607916,
+      "contentHash": "4e120168e78da2ba64a4c94a3a6b25ce",
+      "sourceName": "contracts/IUpdateMaster.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -176,8 +176,8 @@
       ],
       "versionRequirement": "^0.8.9",
       "artifacts": {
-        "Iupmas": {
-          "0.8.20+commit.a1b79de6.Darwin.appleclang": "Iupmas.sol/Iupmas.json"
+        "IUpdateMaster": {
+          "0.8.20+commit.a1b79de6.Darwin.appleclang": "IUpdateMaster.sol/IUpdateMaster.json"
         }
       }
     },
@@ -233,10 +233,10 @@
         }
       }
     },
-    "contracts/StandardCampaign.sol": {
-      "lastModificationDate": 1686015924443,
-      "contentHash": "9a798d3b252f0bce7ae531800cc69028",
-      "sourceName": "contracts/StandardCampaign.sol",
+    "contracts/StandardSubstrate.sol": {
+      "lastModificationDate": 1686054670200,
+      "contentHash": "8c9e6b864403cc3dc0344b24f24bdd82",
+      "sourceName": "contracts/StandardSubstrate.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -267,19 +267,19 @@
       },
       "imports": [
         "contracts/ICheckerMaster.sol",
-        "contracts/Iupmas.sol",
+        "contracts/IUpdateMaster.sol",
         "contracts/Libraries.sol"
       ],
       "versionRequirement": "^0.8.9",
       "artifacts": {
-        "StandardCampaign": {
-          "0.8.20+commit.a1b79de6.Darwin.appleclang": "StandardCampaign.sol/StandardCampaign.json"
+        "StandardSubstrate": {
+          "0.8.20+commit.a1b79de6.Darwin.appleclang": "StandardSubstrate.sol/StandardSubstrate.json"
         }
       }
     },
     "contracts/UpdateMaster.sol": {
-      "lastModificationDate": 1686003530243,
-      "contentHash": "46f08034ab5627f9f601bf45fecc75d8",
+      "lastModificationDate": 1686054529922,
+      "contentHash": "a49f0e3e17b730ab7cfa3ad3e750f712",
       "sourceName": "contracts/UpdateMaster.sol",
       "solcConfig": {
         "settings": {
@@ -310,7 +310,7 @@
         }
       },
       "imports": [
-        "contracts/Istacam.sol",
+        "contracts/IStandardSubstrate.sol",
         "contracts/Libraries.sol"
       ],
       "versionRequirement": "^0.8.9",
@@ -1054,8 +1054,8 @@
       }
     },
     "test/foundry/StandardCampaign.t.sol": {
-      "lastModificationDate": 1686000317136,
-      "contentHash": "6ed1f0334891460d035a166da94bfda1",
+      "lastModificationDate": 1686054743414,
+      "contentHash": "4cc81aa46d506e27c58f8533fdc6649a",
       "sourceName": "test/foundry/StandardCampaign.t.sol",
       "solcConfig": {
         "settings": {
@@ -1088,10 +1088,10 @@
       "imports": [
         "contracts/CheckerMaster.sol",
         "contracts/ICheckerMaster.sol",
-        "contracts/Istacam.sol",
-        "contracts/Iupmas.sol",
+        "contracts/IStandardSubstrate.sol",
+        "contracts/IUpdateMaster.sol",
         "contracts/Libraries.sol",
-        "contracts/StandardCampaign.sol",
+        "contracts/StandardSubstrate.sol",
         "contracts/UpdateMaster.sol",
         "lib/forge-std/lib/ds-test/src/test.sol",
         "lib/forge-std/src/Base.sol",
@@ -1113,8 +1113,8 @@
       ],
       "versionRequirement": "^0.8.13",
       "artifacts": {
-        "StandardCampaignTest": {
-          "0.8.20+commit.a1b79de6.Darwin.appleclang": "StandardCampaign.t.sol/StandardCampaignTest.json"
+        "standardSubstrateTest": {
+          "0.8.20+commit.a1b79de6.Darwin.appleclang": "StandardCampaign.t.sol/standardSubstrateTest.json"
         }
       }
     }

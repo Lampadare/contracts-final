@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 
 import "./Libraries.sol";
 
-interface Istacam {
+interface IStandardSubstrate {
     function getCampaign(
         uint256 _campaignID
     ) external view returns (CampaignManager.Campaign memory);

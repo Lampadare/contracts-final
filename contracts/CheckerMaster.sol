@@ -3,18 +3,18 @@
 pragma solidity ^0.8.9;
 
 import "./Libraries.sol";
-import "./Istacam.sol";
+import "./IStandardSubstrate.sol";
 
 contract CheckerMaster {
     // Link standard campaign contract
-    address public standardCampaignAddress = address(0);
+    address public standardSubstrateAddress = address(0);
 
-    constructor(address _standardCampaignAddress) {
+    constructor(address _standardSubstrateAddress) {
         require(
-            standardCampaignAddress == address(0),
-            "standardCampaignAddress must be set once"
+            standardSubstrateAddress == address(0),
+            "standardSubstrateAddress must be set once"
         );
-        standardCampaignAddress = _standardCampaignAddress;
+        standardSubstrateAddress = _standardSubstrateAddress;
     }
 
     //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
@@ -191,7 +191,7 @@ contract CheckerMaster {
         uint256 _campaignID
     ) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress)
+            IStandardSubstrate(standardSubstrateAddress)
                 .getCampaign(_campaignID)
                 .creationTime == 0
         ) {
@@ -203,7 +203,7 @@ contract CheckerMaster {
 
     function isProjectExisting(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress)
+            IStandardSubstrate(standardSubstrateAddress)
                 .getProject(_projectID)
                 .creationTime == 0
         ) {
@@ -215,7 +215,9 @@ contract CheckerMaster {
 
     function isTaskExisting(uint256 _taskID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getTask(_taskID).creationTime == 0
+            IStandardSubstrate(standardSubstrateAddress)
+                .getTask(_taskID)
+                .creationTime == 0
         ) {
             return false;
         } else {
@@ -227,7 +229,7 @@ contract CheckerMaster {
         uint256 _applicationID
     ) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress)
+            IStandardSubstrate(standardSubstrateAddress)
                 .getApplication(_applicationID)
                 .applicant == address(0)
         ) {
@@ -245,8 +247,9 @@ contract CheckerMaster {
         address _address
     ) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getCampaign(_campaignID).creator ==
-            _address
+            IStandardSubstrate(standardSubstrateAddress)
+                .getCampaign(_campaignID)
+                .creator == _address
         ) {
             return true;
         } else {
@@ -258,9 +261,9 @@ contract CheckerMaster {
         uint256 _campaignID,
         address _address
     ) public view returns (bool) {
-        address payable[] memory owners = Istacam(standardCampaignAddress)
-            .getCampaign(_campaignID)
-            .owners;
+        address payable[] memory owners = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getCampaign(_campaignID).owners;
         for (uint256 i = 0; i < owners.length; i++) {
             if (owners[i] == _address) {
                 return true;
@@ -273,9 +276,9 @@ contract CheckerMaster {
         uint256 _campaignID,
         address _address
     ) public view returns (bool) {
-        address payable[] memory acceptors = Istacam(standardCampaignAddress)
-            .getCampaign(_campaignID)
-            .acceptors;
+        address payable[] memory acceptors = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getCampaign(_campaignID).acceptors;
         for (uint256 i = 0; i < acceptors.length; i++) {
             if (acceptors[i] == _address) {
                 return true;
@@ -288,8 +291,8 @@ contract CheckerMaster {
         uint256 _campaignID,
         address _address
     ) public view returns (bool) {
-        FundingsManager.Fundings[] memory fundings = Istacam(
-            standardCampaignAddress
+        FundingsManager.Fundings[] memory fundings = IStandardSubstrate(
+            standardSubstrateAddress
         ).getCampaign(_campaignID).fundings;
         for (uint256 i = 0; i < fundings.length; i++) {
             if (fundings[i].funder == _address) {
@@ -303,9 +306,9 @@ contract CheckerMaster {
         uint256 _campaignID,
         address _address
     ) public view returns (bool) {
-        address payable[] memory stakeholders = Istacam(standardCampaignAddress)
-            .getCampaign(_campaignID)
-            .allTimeStakeholders;
+        address payable[] memory stakeholders = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getCampaign(_campaignID).allTimeStakeholders;
         for (uint256 i = 0; i < stakeholders.length; i++) {
             if (stakeholders[i] == _address) {
                 return true;
@@ -319,7 +322,7 @@ contract CheckerMaster {
         uint256 _projectID,
         address _address
     ) public view returns (bool) {
-        address[] memory workers = Istacam(standardCampaignAddress)
+        address[] memory workers = IStandardSubstrate(standardSubstrateAddress)
             .getProject(_projectID)
             .workers;
         for (uint256 i = 0; i < workers.length; i++) {
@@ -334,9 +337,9 @@ contract CheckerMaster {
         uint256 _projectID,
         address _address
     ) public view returns (bool) {
-        address[] memory pastWorkers = Istacam(standardCampaignAddress)
-            .getProject(_projectID)
-            .pastWorkers;
+        address[] memory pastWorkers = IStandardSubstrate(
+            standardSubstrateAddress
+        ).getProject(_projectID).pastWorkers;
         for (uint256 i = 0; i < pastWorkers.length; i++) {
             if (pastWorkers[i] == _address) {
                 return true;
@@ -350,7 +353,7 @@ contract CheckerMaster {
         uint256 _taskID,
         address _address
     ) public view returns (bool) {
-        address worker = Istacam(standardCampaignAddress)
+        address worker = IStandardSubstrate(standardSubstrateAddress)
             .getTask(_taskID)
             .worker;
         if (worker == _address) {
@@ -363,8 +366,9 @@ contract CheckerMaster {
     // Campaign Status
     function isCampaignRunning(uint256 _campaignID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getCampaign(_campaignID).status ==
-            CampaignManager.CampaignStatus.Running
+            IStandardSubstrate(standardSubstrateAddress)
+                .getCampaign(_campaignID)
+                .status == CampaignManager.CampaignStatus.Running
         ) {
             return true;
         } else {
@@ -376,8 +380,9 @@ contract CheckerMaster {
     // Project Status
     function isProjectRunning(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getProject(_projectID).status !=
-            ProjectManager.ProjectStatus.Closed
+            IStandardSubstrate(standardSubstrateAddress)
+                .getProject(_projectID)
+                .status != ProjectManager.ProjectStatus.Closed
         ) {
             return true;
         } else {
@@ -387,8 +392,9 @@ contract CheckerMaster {
 
     function isProjectClosed(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getProject(_projectID).status ==
-            ProjectManager.ProjectStatus.Closed
+            IStandardSubstrate(standardSubstrateAddress)
+                .getProject(_projectID)
+                .status == ProjectManager.ProjectStatus.Closed
         ) {
             return true;
         } else {
@@ -398,8 +404,9 @@ contract CheckerMaster {
 
     function isProjectStage(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getProject(_projectID).status ==
-            ProjectManager.ProjectStatus.Stage
+            IStandardSubstrate(standardSubstrateAddress)
+                .getProject(_projectID)
+                .status == ProjectManager.ProjectStatus.Stage
         ) {
             return true;
         } else {
@@ -409,8 +416,9 @@ contract CheckerMaster {
 
     function isProjectGate(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getProject(_projectID).status ==
-            ProjectManager.ProjectStatus.Gate
+            IStandardSubstrate(standardSubstrateAddress)
+                .getProject(_projectID)
+                .status == ProjectManager.ProjectStatus.Gate
         ) {
             return true;
         } else {
@@ -420,8 +428,9 @@ contract CheckerMaster {
 
     function isProjectPostSub(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getProject(_projectID).status ==
-            ProjectManager.ProjectStatus.PostSub
+            IStandardSubstrate(standardSubstrateAddress)
+                .getProject(_projectID)
+                .status == ProjectManager.ProjectStatus.PostSub
         ) {
             return true;
         } else {
@@ -431,8 +440,9 @@ contract CheckerMaster {
 
     function isProjectPostDisp(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getProject(_projectID).status ==
-            ProjectManager.ProjectStatus.PostDisp
+            IStandardSubstrate(standardSubstrateAddress)
+                .getProject(_projectID)
+                .status == ProjectManager.ProjectStatus.PostDisp
         ) {
             return true;
         } else {
@@ -442,8 +452,9 @@ contract CheckerMaster {
 
     function isProjectSettled(uint256 _projectID) public view returns (bool) {
         if (
-            Istacam(standardCampaignAddress).getProject(_projectID).status ==
-            ProjectManager.ProjectStatus.Settled
+            IStandardSubstrate(standardSubstrateAddress)
+                .getProject(_projectID)
+                .status == ProjectManager.ProjectStatus.Settled
         ) {
             return true;
         } else {
