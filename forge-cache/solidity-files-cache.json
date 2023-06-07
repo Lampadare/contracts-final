@@ -13,7 +13,7 @@
   },
   "files": {
     "contracts/CheckerMaster.sol": {
-      "lastModificationDate": 1686054557798,
+      "lastModificationDate": 1686054808836,
       "contentHash": "ff1b0a22f8996b0a70f56ccf46bfd234",
       "sourceName": "contracts/CheckerMaster.sol",
       "solcConfig": {
@@ -56,7 +56,7 @@
       }
     },
     "contracts/ICheckerMaster.sol": {
-      "lastModificationDate": 1685995116432,
+      "lastModificationDate": 1686054813203,
       "contentHash": "da3c903d973371a811a99ce7bc123db5",
       "sourceName": "contracts/ICheckerMaster.sol",
       "solcConfig": {
@@ -98,7 +98,7 @@
       }
     },
     "contracts/IStandardSubstrate.sol": {
-      "lastModificationDate": 1686054569166,
+      "lastModificationDate": 1686054818962,
       "contentHash": "574728dbe6a8733ac8392ee1e148b68e",
       "sourceName": "contracts/IStandardSubstrate.sol",
       "solcConfig": {
@@ -140,7 +140,7 @@
       }
     },
     "contracts/IUpdateMaster.sol": {
-      "lastModificationDate": 1686054607916,
+      "lastModificationDate": 1686054824865,
       "contentHash": "4e120168e78da2ba64a4c94a3a6b25ce",
       "sourceName": "contracts/IUpdateMaster.sol",
       "solcConfig": {
@@ -182,8 +182,8 @@
       }
     },
     "contracts/Libraries.sol": {
-      "lastModificationDate": 1686003591975,
-      "contentHash": "7ac76fb638378e9f4a44832d7167bfe8",
+      "lastModificationDate": 1686150487298,
+      "contentHash": "b04f12fedc3d11c6cb5367429fc9c9c5",
       "sourceName": "contracts/Libraries.sol",
       "solcConfig": {
         "settings": {
@@ -234,8 +234,8 @@
       }
     },
     "contracts/StandardSubstrate.sol": {
-      "lastModificationDate": 1686054670200,
-      "contentHash": "8c9e6b864403cc3dc0344b24f24bdd82",
+      "lastModificationDate": 1686151387593,
+      "contentHash": "913c4b4f98792c10e51247a0af90b6df",
       "sourceName": "contracts/StandardSubstrate.sol",
       "solcConfig": {
         "settings": {
@@ -278,8 +278,8 @@
       }
     },
     "contracts/UpdateMaster.sol": {
-      "lastModificationDate": 1686054529922,
-      "contentHash": "a49f0e3e17b730ab7cfa3ad3e750f712",
+      "lastModificationDate": 1686157188793,
+      "contentHash": "df7da427c0ceedeb239be2725b6b6dfa",
       "sourceName": "contracts/UpdateMaster.sol",
       "solcConfig": {
         "settings": {
@@ -1053,10 +1053,10 @@
         }
       }
     },
-    "test/foundry/StandardCampaign.t.sol": {
-      "lastModificationDate": 1686054743414,
-      "contentHash": "4cc81aa46d506e27c58f8533fdc6649a",
-      "sourceName": "test/foundry/StandardCampaign.t.sol",
+    "test/foundry/StandardSubstrate.t.sol": {
+      "lastModificationDate": 1686158768492,
+      "contentHash": "b23366facfad0491f48046e117b35636",
+      "sourceName": "test/foundry/StandardSubstrate.t.sol",
       "solcConfig": {
         "settings": {
           "optimizer": {
@@ -1114,7 +1114,7 @@
       "versionRequirement": "^0.8.13",
       "artifacts": {
         "standardSubstrateTest": {
-          "0.8.20+commit.a1b79de6.Darwin.appleclang": "StandardCampaign.t.sol/standardSubstrateTest.json"
+          "0.8.20+commit.a1b79de6.Darwin.appleclang": "StandardSubstrate.t.sol/standardSubstrateTest.json"
         }
       }
     }

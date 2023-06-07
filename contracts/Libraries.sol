@@ -643,7 +643,7 @@ library ProjectManager {
         uint256 _id,
         uint256 _applicationCount
     ) external {
-        require(_project.applicationRequired, "E51");
+        require(_project.applicationRequired, "Application not required");
 
         // Creates application to deal with stake
 

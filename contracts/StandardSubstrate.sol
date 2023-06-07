@@ -605,7 +605,13 @@ contract StandardSubstrate {
     function workerEnrolNoApplication(
         uint256 _projectID,
         uint256 _stake
-    ) public payable isMoneyIntended(_stake) isMoreThanEnrolStake(_stake) {
+    )
+        public
+        payable
+        isMoneyIntended(_stake)
+        isMoreThanEnrolStake(_stake)
+        returns (uint256)
+    {
         // ================= Checks ==================
         ICheckerMaster(checkerMasterAddress).requireCampaignExisting(
             projects[_projectID].parentCampaign
@@ -618,7 +624,7 @@ contract StandardSubstrate {
         // ===========================================
 
         if (new_statusFixer(_projectID)) {
-            return;
+            return 0;
         }
 
         // Get structs
@@ -642,6 +648,7 @@ contract StandardSubstrate {
         );
 
         applicationCount++;
+        return applicationCount - 1;
     }
 
     // Apply to project to become Worker ✅
@@ -712,7 +719,7 @@ contract StandardSubstrate {
         ProjectManager.Application storage application = applications[
             _applicationID
         ];
-        // if project not accepted
+        // if application not accepted
         if (!_accepted) {
             applications[_applicationID].accepted = false;
             applications[_applicationID].enrolStake.amountUsed = application

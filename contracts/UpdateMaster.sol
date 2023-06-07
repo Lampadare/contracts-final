@@ -98,7 +98,9 @@ contract UpdateMaster {
             standardSubstrateAddress
         ).getProject(_projectID);
 
-        uint256[] memory declinedTasks = new uint256[](0);
+        uint256[] memory declinedTasks = new uint256[](
+            project.childTasks.length
+        );
 
         for (uint256 i = 0; i < project.childTasks.length; i++) {
             TaskManager.Task memory task = IStandardSubstrate(
